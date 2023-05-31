@@ -7,7 +7,7 @@ import AnimatedLottieView from 'lottie-react-native';
 export default function TabThreeScreen() {
   return (
     <View style={styles.container}>
-      <AnimatedLottieView source={require('../../assets/lottie/62761-walking-pothos.json')} autoPlay loop speed={0.9}></AnimatedLottieView>
+      <AnimatedLottieView source={require('../../assets/lottie/Pothos.json')} autoPlay loop speed={0.9}></AnimatedLottieView>
     </View>
   );
 }
