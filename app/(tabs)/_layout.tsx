@@ -44,10 +44,17 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="three"
+        options={{
+          title: 'PlantSense',
+          tabBarIcon: ({ color }) => <TabBarIcon name="leaf" color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="two"
         options={{
           title: 'Colors',
-          tabBarIcon: ({ color }) => <TabBarIcon name="leaf" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="paint-brush" color={color} />,
         }}
       />
     </Tabs>
