@@ -5,6 +5,7 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
+import * as SystemUI from "expo-system-ui";
 import {
   setBackgroundColorAsync,
   setPositionAsync,
@@ -13,6 +14,8 @@ import {
 import { SplashScreen, Stack } from "expo-router";
 import { useCallback, useEffect } from "react";
 import { Platform, useColorScheme } from "react-native";
+
+import Colors from "../constants/Colors";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -56,6 +59,7 @@ function RootLayoutNav() {
       await setPositionAsync("absolute");
       // transparent backgrounds to see through
       await setBackgroundColorAsync("rgba(0, 0, 0, 0.005)");
+      SystemUI.setBackgroundColorAsync(Colors.light.background);
     }
   }, []);
 
@@ -67,13 +71,18 @@ function RootLayoutNav() {
   return (
     <>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="(main)" options={{ headerShown: false }} />
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="(main)" />
           <Stack.Screen
             name="(notifications)"
-            options={{ headerShown: false }}
+            options={{
+              headerShown: true,
+              title: "Notifications",
+              headerStyle: { backgroundColor: Colors.light.primary2 },
+              headerTintColor: "#fff",
+            }}
           />
-          <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+          <Stack.Screen name="modal" />
         </Stack>
       </ThemeProvider>
     </>

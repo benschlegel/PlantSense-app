@@ -7,7 +7,7 @@ import { Text, View } from "../../components/Themed";
 export default function MainScreen() {
   return (
     <View style={styles.container}>
-      <Text>Notifications!</Text>
+      <Text>Notifications</Text>
     </View>
   );
 }

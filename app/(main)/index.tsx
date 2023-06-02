@@ -1,11 +1,19 @@
-import { Platform, StyleSheet } from "react-native";
+import {
+  Platform,
+  Pressable,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import AnimatedLottieView from "lottie-react-native";
 import React from "react";
 import { FontAwesome } from "@expo/vector-icons";
+import { Link } from "expo-router";
 
 import EditScreenInfo from "../../components/EditScreenInfo";
 import { Text, View } from "../../components/Themed";
 import Colors from "../../constants/Colors";
+
+const isAnimationEnabled = false;
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>["name"];
@@ -22,17 +30,32 @@ export default function MainScreen() {
         <View style={styles.red}>
           <View style={styles.buttonContainer}>
             <TabBarIcon name="gear" iconSize={34} color={Colors.light.dark} />
-            <TabBarIcon name="bell" iconSize={28} color={Colors.light.dark} />
+            <Link href={"/(notifications)"} asChild>
+              <Pressable>
+                {({ pressed }) => (
+                  <TabBarIcon
+                    name="bell"
+                    iconSize={28}
+                    color={Colors.light.dark}
+                  />
+                )}
+              </Pressable>
+            </Link>
           </View>
           <View style={styles.infoContainer}>{/* <Text>Test</Text> */}</View>
         </View>
         <View style={styles.green}>
-          <View style={styles.buttonColorContainer}>
+          <TouchableOpacity
+            // href={"/notifications"}
+            style={styles.buttonColorContainer}
+            onPress={() => console.log("change colors was pressed")}
+          >
             <Text>Change Colors</Text>
-          </View>
+          </TouchableOpacity>
         </View>
       </View>
-      {Platform.OS === "ios" && (
+      {Platform.OS === "ios" && isAnimationEnabled && (
+        // <View pointerEvents="none">
         <AnimatedLottieView
           source={require("../../assets/lottie/Pothos.json")}
           autoPlay
@@ -40,6 +63,7 @@ export default function MainScreen() {
           speed={0.95}
           style={styles.absolute}
         />
+        // </View>
       )}
     </>
   );
@@ -56,11 +80,12 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 20,
     right: 0,
+    // backgroundColor: "red",
     alignSelf: "center",
   },
   red: {
     flex: 1,
-    // backgroundColor: "red",
+    // backgroundColor: "blue",
     width: "100%",
   },
   green: {
@@ -90,6 +115,6 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     flexDirection: "column",
-    backgroundColor: Colors.light.light,
+    backgroundColor: "red",
   },
 });
