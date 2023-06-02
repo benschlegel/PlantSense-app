@@ -5,9 +5,14 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
+import {
+  setBackgroundColorAsync,
+  setPositionAsync,
+  setVisibilityAsync,
+} from "expo-navigation-bar";
 import { SplashScreen, Stack } from "expo-router";
-import { useEffect } from "react";
-import { useColorScheme } from "react-native";
+import { useCallback, useEffect } from "react";
+import { Platform, useColorScheme } from "react-native";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -44,6 +49,19 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
+  //Sets transparency on android on startup
+  const fixAndroidNavbar = useCallback(async () => {
+    if (Platform.OS === "android") {
+      // enables edge-to-edge mode
+      await setPositionAsync("absolute");
+      // transparent backgrounds to see through
+      await setBackgroundColorAsync("rgba(0, 0, 0, 0.005)");
+    }
+  }, []);
+
+  useEffect(() => {
+    fixAndroidNavbar();
+  });
   const colorScheme = useColorScheme();
 
   return (

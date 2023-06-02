@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import AnimatedLottieView from "lottie-react-native";
 import React from "react";
 import { FontAwesome } from "@expo/vector-icons";
@@ -21,20 +21,26 @@ export default function MainScreen() {
       <View style={styles.container}>
         <View style={styles.red}>
           <View style={styles.buttonContainer}>
-            <TabBarIcon name="gear" iconSize={34} color={Colors.light.text} />
-            <TabBarIcon name="bell" iconSize={28} color={Colors.light.text} />
+            <TabBarIcon name="gear" iconSize={34} color={Colors.light.dark} />
+            <TabBarIcon name="bell" iconSize={28} color={Colors.light.dark} />
           </View>
           <View style={styles.infoContainer}>{/* <Text>Test</Text> */}</View>
         </View>
-        <View style={styles.green}>{/* <Text>Test</Text> */}</View>
+        <View style={styles.green}>
+          <View style={styles.buttonColorContainer}>
+            <Text>Change Colors</Text>
+          </View>
+        </View>
       </View>
-      <AnimatedLottieView
-        source={require("../../assets/lottie/Pothos.json")}
-        autoPlay
-        loop
-        speed={0.9}
-        style={styles.absolute}
-      />
+      {Platform.OS === "ios" && (
+        <AnimatedLottieView
+          source={require("../../assets/lottie/Pothos.json")}
+          autoPlay
+          loop
+          speed={0.95}
+          style={styles.absolute}
+        />
+      )}
     </>
   );
 }
@@ -48,7 +54,7 @@ const styles = StyleSheet.create({
   },
   absolute: {
     position: "absolute",
-    top: 0,
+    top: 20,
     right: 0,
     alignSelf: "center",
   },
@@ -60,6 +66,8 @@ const styles = StyleSheet.create({
   green: {
     // backgroundColor: "green",
     flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
     width: "100%",
   },
   buttonContainer: {
@@ -68,6 +76,17 @@ const styles = StyleSheet.create({
     marginTop: 70,
     justifyContent: "space-between",
     alignItems: "center",
+  },
+  buttonColorContainer: {
+    backgroundColor: Colors.light.primary2,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 12,
+    paddingVertical: 12,
+    width: "40%",
+    borderColor: Colors.light.dark,
+    borderWidth: 1.5,
+    marginTop: 48,
   },
   infoContainer: {
     flexDirection: "column",
