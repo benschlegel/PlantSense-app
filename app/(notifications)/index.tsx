@@ -1,62 +1,24 @@
 import { StyleSheet, TouchableOpacity } from "react-native";
-import AnimatedLottieView from "lottie-react-native";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import EditScreenInfo from "../../components/EditScreenInfo";
 import { Text, View } from "../../components/Themed";
 import Colors from "../../constants/Colors";
 import type { NotificationResponse } from "../../constants/Types";
+import { useInterval } from "../../hooks/useInterval";
+import Notification from "../../components/Notification";
 
 const baseServerUrl = "http://192.168.141.24";
-const ledEndpoint = "/led";
+const notificationsEndpoint = "/notifications";
 
-async function sendLedRequest(red: number, green: number, blue: number) {
-  const payload = {
-    red: red,
-    green: green,
-    blue: blue,
-  };
-
-  // Send post request to esp
-  fetch(baseServerUrl + ledEndpoint, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
-  })
-    .then((response) => response.json())
-    .then((result) => {
-      console.log("Success:", result);
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
-}
-
-async function getBaseEndpoint() {
-  const response = await fetch(baseServerUrl);
-  const jsonData = await response.text();
-  console.log(jsonData);
-}
-
-async function checkHeartbeat() {
-  const response = await fetch(baseServerUrl + "/heartbeat")
-    .then((res) => {
-      const { status } = res;
-      console.log("Received status code: ", status);
-    })
-    .catch((error) => {
-      console.error("Heartbeat Error:", error);
-    });
-}
-
-async function getNotifications() {
+async function getNotifications(deviceName: string) {
+  // Add '?' for parameter, URLSearchParams handles the rest
   const response: NotificationResponse = await fetch(
     baseServerUrl +
-      "/notifications?" +
+      notificationsEndpoint +
+      "?" +
       new URLSearchParams({
-        name: "PlantSense - Planty",
+        name: deviceName,
       }).toString()
   )
     .then((res) => res.json())
@@ -73,46 +35,57 @@ async function getNotifications() {
 }
 
 export default function MainScreen() {
-  const sendHttpRequest = useCallback(async () => {
-    const response = await fetch(baseServerUrl);
-    const jsonData = await response.text();
-    console.log(jsonData);
+  const [devices, setDevices] = useState<string[]>([]);
+
+  // Fetch devices on mount/page load
+  useEffect(() => {
+    const fetchDevices = async () => {
+      const data = await fetch(baseServerUrl + "/devices");
+      const devicesJson: string[] = await data.json();
+      setDevices(devicesJson);
+    };
+    fetchDevices().catch((err) => console.log(err));
   }, []);
+
+  // Get notifications in interval
+  useInterval(() => {
+    // getDevices();
+  }, 1500);
+
+  const testArr = [
+    "Plant has been exposed to too much sunlight. Please move the plant.",
+    "Plant is thirsty. Please water the plant.",
+  ];
   return (
     <View style={styles.container}>
-      <Text>Colors</Text>
-      <View style={styles.green}>
+      <View style={styles.notificationContainer}>
+        {devices.map((name, index) => {
+          return (
+            <Notification
+              deviceName={name}
+              notificationAmount={0}
+              notifications={testArr}
+              key={index}
+            />
+          );
+        })}
+      </View>
+      {/* <View style={styles.green}>
         <TouchableOpacity
           style={[styles.buttonColorContainer, styles.red]}
-          onPress={() => sendLedRequest(255, 255, 0)}
+          onPress={() => console.log("test")}
         >
-          <Text>Red</Text>
+          <Text>Devices</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.green}>
         <TouchableOpacity
           style={styles.buttonColorContainer}
-          onPress={() => sendLedRequest(0, 255, 0)}
+          onPress={() => getNotifications(devices[1])}
         >
-          <Text>Green</Text>
+          <Text>Notifications</Text>
         </TouchableOpacity>
-      </View>
-      <View style={styles.green}>
-        <TouchableOpacity
-          style={[styles.buttonColorContainer, styles.blue]}
-          onPress={() => sendLedRequest(0, 0, 255)}
-        >
-          <Text>Blue</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.green}>
-        <TouchableOpacity
-          style={[styles.buttonColorContainer, styles.blue]}
-          onPress={() => getNotifications()}
-        >
-          <Text>heartbeat check</Text>
-        </TouchableOpacity>
-      </View>
+      </View> */}
     </View>
   );
 }
@@ -142,7 +115,11 @@ const styles = StyleSheet.create({
   red: {
     backgroundColor: "#F45050",
   },
-  blue: {
-    backgroundColor: "#0079FF",
+  notificationContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    width: "100%",
+    gap: 24,
   },
 });
