@@ -5,6 +5,7 @@ import { useCallback } from "react";
 import EditScreenInfo from "../../components/EditScreenInfo";
 import { Text, View } from "../../components/Themed";
 import Colors from "../../constants/Colors";
+import type { NotificationResponse } from "../../constants/Types";
 
 const baseServerUrl = "http://192.168.141.24";
 const ledEndpoint = "/led";
@@ -50,6 +51,27 @@ async function checkHeartbeat() {
     });
 }
 
+async function getNotifications() {
+  const response: NotificationResponse = await fetch(
+    baseServerUrl +
+      "/notifications?" +
+      new URLSearchParams({
+        name: "PlantSense - Planty",
+      }).toString()
+  )
+    .then((res) => res.json())
+    .catch((error) => {
+      // console.error("Device not found.");
+      return;
+    });
+
+  if (!response) {
+    console.error("Device not found.");
+  } else {
+    console.log("Response (notifications): ", response);
+  }
+}
+
 export default function MainScreen() {
   const sendHttpRequest = useCallback(async () => {
     const response = await fetch(baseServerUrl);
@@ -86,7 +108,7 @@ export default function MainScreen() {
       <View style={styles.green}>
         <TouchableOpacity
           style={[styles.buttonColorContainer, styles.blue]}
-          onPress={() => checkHeartbeat()}
+          onPress={() => getNotifications()}
         >
           <Text>heartbeat check</Text>
         </TouchableOpacity>
