@@ -39,6 +39,17 @@ async function getBaseEndpoint() {
   console.log(jsonData);
 }
 
+async function checkHeartbeat() {
+  const response = await fetch(baseServerUrl + "/heartbeat")
+    .then((res) => {
+      const { status } = res;
+      console.log("Received status code: ", status);
+    })
+    .catch((error) => {
+      console.error("Heartbeat Error:", error);
+    });
+}
+
 export default function MainScreen() {
   const sendHttpRequest = useCallback(async () => {
     const response = await fetch(baseServerUrl);
@@ -70,6 +81,14 @@ export default function MainScreen() {
           onPress={() => sendLedRequest(0, 0, 255)}
         >
           <Text>Blue</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.green}>
+        <TouchableOpacity
+          style={[styles.buttonColorContainer, styles.blue]}
+          onPress={() => checkHeartbeat()}
+        >
+          <Text>heartbeat check</Text>
         </TouchableOpacity>
       </View>
     </View>
