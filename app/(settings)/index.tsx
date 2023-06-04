@@ -72,7 +72,7 @@ async function getNotifications() {
   }
 }
 
-export default function MainScreen() {
+export default function SettingsScreen() {
   const sendHttpRequest = useCallback(async () => {
     const response = await fetch(baseServerUrl);
     const jsonData = await response.text();

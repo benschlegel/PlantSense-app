@@ -29,7 +29,18 @@ export default function MainScreen() {
       <View style={styles.container}>
         <View style={styles.red}>
           <View style={styles.buttonContainer}>
-            <TabBarIcon name="gear" iconSize={34} color={Colors.light.dark} />
+            {/* <TabBarIcon name="gear" iconSize={34} color={Colors.light.dark} /> */}
+            <Link href={"/(settings)"} asChild>
+              <Pressable>
+                {({ pressed }) => (
+                  <TabBarIcon
+                    name="gear"
+                    iconSize={34}
+                    color={Colors.light.dark}
+                  />
+                )}
+              </Pressable>
+            </Link>
             <Link href={"/(notifications)"} asChild>
               <Pressable>
                 {({ pressed }) => (

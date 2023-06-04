@@ -82,6 +82,15 @@ function RootLayoutNav() {
               headerTintColor: "#fff",
             }}
           />
+          <Stack.Screen
+            name="(settings)"
+            options={{
+              headerShown: true,
+              title: "Settings",
+              headerStyle: { backgroundColor: Colors.light.primary2 },
+              headerTintColor: "#fff",
+            }}
+          />
           <Stack.Screen name="modal" />
         </Stack>
       </ThemeProvider>
