@@ -13,7 +13,7 @@ import EditScreenInfo from "../../components/EditScreenInfo";
 import { Text, View } from "../../components/Themed";
 import Colors from "../../constants/Colors";
 
-const isAnimationEnabled = false;
+const isAnimationEnabled = true;
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>["name"];
@@ -55,6 +55,18 @@ export default function MainScreen() {
           </View>
           <View style={styles.infoContainer}>{/* <Text>Test</Text> */}</View>
         </View>
+        {/* <View style={{ paddingHorizontal: 200, paddingVertical: 200 }}> */}
+        {Platform.OS === "ios" && isAnimationEnabled && (
+          // <View pointerEvents="none">
+          <AnimatedLottieView
+            source={require("../../assets/lottie/Pothos.json")}
+            autoPlay
+            loop
+            speed={0.95}
+            style={styles.absolute}
+          />
+        )}
+        {/* </View> */}
         <View style={styles.green}>
           <TouchableOpacity
             // href={"/notifications"}
@@ -65,17 +77,6 @@ export default function MainScreen() {
           </TouchableOpacity>
         </View>
       </View>
-      {Platform.OS === "ios" && isAnimationEnabled && (
-        // <View pointerEvents="none">
-        <AnimatedLottieView
-          source={require("../../assets/lottie/Pothos.json")}
-          autoPlay
-          loop
-          speed={0.95}
-          style={styles.absolute}
-        />
-        // </View>
-      )}
     </>
   );
 }
@@ -88,23 +89,33 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   absolute: {
-    position: "absolute",
-    top: 20,
-    right: 0,
+    // position: "absolute",
+    // top: 20,
+    // right: 0,
     // backgroundColor: "red",
-    alignSelf: "center",
+    // height: 400,
+    width: "90%",
+    flex: 1,
+    // margin: 100,
+    // alignContent: "center",
+    // alignItems: "center",
+    // alignSelf: "center",
+    // verticalAlign: "middle",
   },
   red: {
-    flex: 1,
+    // flex: 1,
     // backgroundColor: "blue",
+    paddingBottom: 80,
     width: "100%",
   },
   green: {
     // backgroundColor: "green",
-    flex: 1,
+    // flex: 1,
     justifyContent: "center",
     alignItems: "center",
+
     width: "100%",
+    paddingBottom: 100,
   },
   buttonContainer: {
     flexDirection: "row",

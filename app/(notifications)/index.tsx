@@ -14,6 +14,7 @@ import type {
   NotificationType,
   NotificationResponse,
 } from "../../constants/Types";
+import { NotificationStatus } from "../../constants/Types";
 import { useInterval } from "../../hooks/useInterval";
 import Notification from "../../components/Notification";
 
@@ -61,9 +62,13 @@ export default function MainScreen() {
   // TODO: remove (+ state vars), already covered by fetchNotifications
   useEffect(() => {
     const fetchDevices = async () => {
-      const data = await fetch(baseServerUrl + "/devices");
-      const devicesJson: string[] = await data.json();
-      setDevices(devicesJson);
+      try {
+        const data = await fetch(baseServerUrl + "/devices");
+        const devicesJson: string[] = await data.json();
+        setDevices(devicesJson);
+      } catch (err) {
+        console.log("Error while fetching notifications: ", err);
+      }
     };
     fetchDevices().catch((err) => console.log(err));
   }, []);
@@ -131,9 +136,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 24,
     marginVertical: 32,
+    // marginBottom: 32,
+    // paddingBottom: 32,
+    // marginTop: 32,
   },
   notificationContainerStyle: {
     width: "100%",
-    // paddingBottom: 20,
+    // paddingBottom: 200,
   },
 });
