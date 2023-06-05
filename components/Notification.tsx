@@ -8,20 +8,28 @@ import Hr from "./Hr";
 type NotificationProps = {
   deviceName: string;
   notifications: number[];
+  fetchNotifications: () => void;
 };
 
 export default function Notification({
   deviceName,
   notifications,
+  fetchNotifications,
 }: NotificationProps) {
   const notificationAmount = notifications.length;
+
+  const clearNotification = (name: string, index: number) => {
+    deleteNotification(deviceName, index);
+    fetchNotifications();
+    // TODO: either refresh by api call or delete locally by passing state down
+  };
   return (
     <View style={styles.notificationContainer}>
       <View style={styles.notificationTopRow}>
         <View style={styles.deviceInfoContainer}>
           <Text style={styles.deviceNameText}>{deviceName}</Text>
           <Text style={styles.notificationNumberText}>
-            {notificationAmount + " new notifications"}
+            {notificationAmount + " new alerts"}
           </Text>
         </View>
         <Text />
@@ -31,7 +39,7 @@ export default function Notification({
           return (
             <View key={index}>
               <TouchableOpacity
-                onPress={() => deleteNotification(deviceName, index)}
+                onPress={() => clearNotification(deviceName, index)}
               >
                 <View style={styles.singleNotificationContainer}>
                   <Text style={styles.notificationInfoText}>

@@ -95,7 +95,12 @@ export default function MainScreen() {
       <ScrollView
         contentContainerStyle={styles.notificationContainer}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            progressBackgroundColor={Colors.light.light}
+            colors={[Colors.light.primary2]}
+          />
         }
         style={styles.notificationContainerStyle}
       >
@@ -104,6 +109,7 @@ export default function MainScreen() {
             <Notification
               deviceName={notification.name}
               notifications={notification.notifications}
+              fetchNotifications={fetchNotifications}
               key={index}
             />
           );
