@@ -1,6 +1,7 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
 import Colors from "../constants/Colors";
+import { deleteNotification } from "../helpers/functions";
 
 import Hr from "./Hr";
 
@@ -29,9 +30,15 @@ export default function Notification({
         {notifications.map((notification, index) => {
           return (
             <View key={index}>
-              <View style={styles.singleNotificationContainer}>
-                <Text style={styles.notificationInfoText}>{notification}</Text>
-              </View>
+              <TouchableOpacity
+                onPress={() => deleteNotification(deviceName, index)}
+              >
+                <View style={styles.singleNotificationContainer}>
+                  <Text style={styles.notificationInfoText}>
+                    {notification}
+                  </Text>
+                </View>
+              </TouchableOpacity>
               {index < notificationAmount - 1 && <Hr key={index + 10} />}
             </View>
           );

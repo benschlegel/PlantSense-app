@@ -6,8 +6,8 @@ import EditScreenInfo from "../../components/EditScreenInfo";
 import { Text, View } from "../../components/Themed";
 import Colors from "../../constants/Colors";
 import type { NotificationResponse } from "../../constants/Types";
+import { baseServerUrl } from "../../constants/Config";
 
-const baseServerUrl = "http://192.168.141.24";
 const ledEndpoint = "/led";
 
 async function sendLedRequest(red: number, green: number, blue: number) {

@@ -1,4 +1,9 @@
-import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { useCallback, useEffect, useState } from "react";
 import { useImmer } from "use-immer";
 
@@ -41,9 +46,19 @@ async function getNotifications(deviceName: string) {
 export default function MainScreen() {
   const [devices, setDevices] = useState<string[]>([]);
   const [notifications, setNotifications] = useImmer<NotificationType[]>([]);
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 650);
+  }, []);
   // const [];
 
   // Fetch devices on mount/page load
+  // TODO: remove (+ state vars), already covered by fetchNotifications
   useEffect(() => {
     const fetchDevices = async () => {
       const data = await fetch(baseServerUrl + "/devices");
@@ -79,6 +94,9 @@ export default function MainScreen() {
     <View style={styles.container}>
       <ScrollView
         contentContainerStyle={styles.notificationContainer}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
         style={styles.notificationContainerStyle}
       >
         {notifications.map((notification, index) => {
@@ -91,22 +109,6 @@ export default function MainScreen() {
           );
         })}
       </ScrollView>
-      {/* <View style={styles.green}>
-        <TouchableOpacity
-          style={[styles.buttonColorContainer, styles.red]}
-          onPress={() => console.log("test")}
-        >
-          <Text>Devices</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.green}>
-        <TouchableOpacity
-          style={styles.buttonColorContainer}
-          onPress={() => getNotifications(devices[1])}
-        >
-          <Text>Notifications</Text>
-        </TouchableOpacity>
-      </View> */}
     </View>
   );
 }
@@ -116,25 +118,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-  },
-  green: {
-    alignItems: "center",
-    justifyContent: "center",
-    width: "100%",
-  },
-  buttonColorContainer: {
-    backgroundColor: Colors.light.primary2,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 12,
-    paddingVertical: 12,
-    width: "40%",
-    borderColor: Colors.light.dark,
-    borderWidth: 1.5,
-    marginTop: 48,
-  },
-  red: {
-    backgroundColor: "#F45050",
   },
   notificationContainer: {
     display: "flex",
