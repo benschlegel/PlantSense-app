@@ -1,10 +1,15 @@
+import type { ViewStyle, StyleProp } from "react-native";
 import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 
 import Colors from "../constants/Colors";
 
-export default function Hr() {
-  return <View style={styles.hr} />;
+type HrProps = {
+  style?: StyleProp<ViewStyle>;
+};
+
+export default function Hr({ style }: HrProps) {
+  return <View style={[styles.hr, style]} />;
 }
 
 const styles = StyleSheet.create({

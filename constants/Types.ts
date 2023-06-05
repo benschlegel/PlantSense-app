@@ -12,4 +12,5 @@ export enum NotificationStatus {
   HIGH_SUN,
   LOW_SOIL,
   HIGH_SOIL,
+  NONE = -1,
 }

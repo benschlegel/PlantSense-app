@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import AnimatedLottieView from "lottie-react-native";
 import { useCallback } from "react";
 
@@ -7,6 +7,8 @@ import { Text, View } from "../../components/Themed";
 import Colors from "../../constants/Colors";
 import type { NotificationResponse } from "../../constants/Types";
 import { baseServerUrl } from "../../constants/Config";
+import StyledButton from "../../components/StyledButton";
+import Hr from "../../components/Hr";
 
 const ledEndpoint = "/led";
 
@@ -80,8 +82,26 @@ export default function SettingsScreen() {
   }, []);
   return (
     <View style={styles.container}>
-      <Text>Colors</Text>
-      <View style={styles.green}>
+      <Text style={styles.header}>Trigger States</Text>
+      <ScrollView
+        style={styles.scrollContainerStyle}
+        contentContainerStyle={styles.scrollContentStyle}
+      >
+        <StyledButton title="Low water" buttonStyle={styles.blue} />
+        <StyledButton
+          title="Too little sun"
+          buttonStyle={styles.yellow}
+          textStyle={styles.yellowText}
+        />
+        <StyledButton
+          title="Too little fertilizer"
+          buttonStyle={styles.red}
+          onPress={() => sendLedRequest(255, 0, 255)}
+        />
+        <Hr style={styles.hrStyle} />
+        <StyledButton title="Too little fertilizer" />
+      </ScrollView>
+      {/* <View style={styles.green}>
         <TouchableOpacity
           style={[styles.buttonColorContainer, styles.red]}
           onPress={() => sendLedRequest(255, 255, 0)}
@@ -112,7 +132,7 @@ export default function SettingsScreen() {
         >
           <Text>heartbeat check</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
     </View>
   );
 }
@@ -123,26 +143,34 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  green: {
-    alignItems: "center",
-    justifyContent: "center",
-    width: "100%",
-  },
-  buttonColorContainer: {
-    backgroundColor: Colors.light.primary2,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 12,
-    paddingVertical: 12,
-    width: "40%",
-    borderColor: Colors.light.dark,
-    borderWidth: 1.5,
-    marginTop: 48,
-  },
   red: {
     backgroundColor: "#F45050",
   },
   blue: {
     backgroundColor: "#0079FF",
+  },
+  yellow: {
+    backgroundColor: "#F7DB6A",
+  },
+  yellowText: {
+    color: Colors.light.dark,
+  },
+  header: {
+    fontWeight: "bold",
+    fontSize: 28,
+    marginTop: 32,
+    marginBottom: 16,
+  },
+  scrollContainerStyle: {
+    width: "100%",
+    marginTop: 16,
+  },
+  scrollContentStyle: {
+    gap: 22,
+  },
+  hrStyle: {
+    width: "75%",
+    alignSelf: "center",
+    marginVertical: 16,
   },
 });

@@ -21,10 +21,10 @@ export default function Notification({
 }: NotificationProps) {
   const notificationAmount = notifications.length;
 
+  // Delete notifications on server, then re-fetch new ones
   const clearNotification = (name: string, index: number) => {
     deleteNotification(deviceName, index);
     fetchNotifications();
-    // TODO: either refresh by api call or delete locally by passing state down
   };
   return (
     <View style={styles.notificationContainer}>
@@ -32,7 +32,7 @@ export default function Notification({
         <View style={styles.deviceInfoContainer}>
           <Text style={styles.deviceNameText}>{deviceName}</Text>
           <Text style={styles.notificationNumberText}>
-            {notificationAmount + " new alerts"}
+            {notificationAmount + " new alert(s)"}
           </Text>
         </View>
         <Text />
