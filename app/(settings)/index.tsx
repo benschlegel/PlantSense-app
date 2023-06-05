@@ -5,7 +5,10 @@ import { useCallback } from "react";
 import EditScreenInfo from "../../components/EditScreenInfo";
 import { Text, View } from "../../components/Themed";
 import Colors from "../../constants/Colors";
-import type { NotificationResponse } from "../../constants/Types";
+import type {
+  NotificationResponse,
+  NotificationStatus,
+} from "../../constants/Types";
 import { baseServerUrl } from "../../constants/Config";
 import StyledButton from "../../components/StyledButton";
 import Hr from "../../components/Hr";
@@ -34,6 +37,23 @@ async function sendLedRequest(red: number, green: number, blue: number) {
     .catch((error) => {
       console.error("Error:", error);
     });
+}
+
+async function sendSetStateRequest(state: NotificationStatus) {
+  const payload = {
+    state: state,
+  };
+
+  // Send post request to server
+  fetch(baseServerUrl + "/setState", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  }).catch((error) => {
+    console.error("Error:", error);
+  });
 }
 
 async function getBaseEndpoint() {
@@ -75,11 +95,6 @@ async function getNotifications() {
 }
 
 export default function SettingsScreen() {
-  const sendHttpRequest = useCallback(async () => {
-    const response = await fetch(baseServerUrl);
-    const jsonData = await response.text();
-    console.log(jsonData);
-  }, []);
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Trigger States</Text>
@@ -87,19 +102,67 @@ export default function SettingsScreen() {
         style={styles.scrollContainerStyle}
         contentContainerStyle={styles.scrollContentStyle}
       >
-        <StyledButton title="Low water" buttonStyle={styles.blue} />
+        <StyledButton
+          title="Low water"
+          buttonStyle={styles.blue}
+          onPress={() => sendSetStateRequest(0)}
+        />
         <StyledButton
           title="Too little sun"
           buttonStyle={styles.yellow}
           textStyle={styles.yellowText}
+          onPress={() => sendSetStateRequest(2)}
         />
         <StyledButton
           title="Too little fertilizer"
           buttonStyle={styles.red}
+          onPress={() => sendSetStateRequest(4)}
+        />
+        {/* <StyledButton
+          title="blue"
+          buttonStyle={styles.blue}
+          onPress={() => sendLedRequest(0, 0, 255)}
+        />
+        <StyledButton
+          title="green"
+          buttonStyle={{ backgroundColor: "green" }}
+          textStyle={styles.yellowText}
+          onPress={() => sendLedRequest(0, 255, 0)}
+        />
+        <StyledButton
+          title="red"
+          buttonStyle={styles.red}
+          onPress={() => sendLedRequest(255, 0, 0)}
+        />
+  */}
+        {/* <StyledButton
+          title="purple"
+          buttonStyle={{ backgroundColor: "purple" }}
           onPress={() => sendLedRequest(255, 0, 255)}
+        /> */}
+        <Hr style={styles.hrStyle} />
+        <StyledButton
+          title="Too much water"
+          buttonStyle={styles.blue}
+          onPress={() => sendSetStateRequest(1)}
+        />
+        <StyledButton
+          title="Too much sun"
+          buttonStyle={styles.yellow}
+          textStyle={styles.yellowText}
+          onPress={() => sendSetStateRequest(3)}
+        />
+        <StyledButton
+          title="Too much fertilizer"
+          buttonStyle={styles.red}
+          onPress={() => sendSetStateRequest(5)}
         />
         <Hr style={styles.hrStyle} />
-        <StyledButton title="Too little fertilizer" />
+        <StyledButton title="Toggle breathing" />
+        <StyledButton
+          title="Turn off LED"
+          onPress={() => sendLedRequest(0, 0, 0)}
+        />
       </ScrollView>
       {/* <View style={styles.green}>
         <TouchableOpacity

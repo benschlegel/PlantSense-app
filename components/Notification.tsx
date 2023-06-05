@@ -50,7 +50,7 @@ export default function Notification({
                   </Text>
                 </View>
               </TouchableOpacity>
-              {index < notificationAmount - 1 && <Hr key={index + 10} />}
+              {index < notificationAmount - 1 && <Hr />}
             </View>
           );
         })}
