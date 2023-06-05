@@ -1,7 +1,10 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
 import Colors from "../constants/Colors";
-import { deleteNotification } from "../helpers/functions";
+import {
+  deleteNotification,
+  notificationStatusToText,
+} from "../helpers/functions";
 
 import Hr from "./Hr";
 
@@ -43,7 +46,7 @@ export default function Notification({
               >
                 <View style={styles.singleNotificationContainer}>
                   <Text style={styles.notificationInfoText}>
-                    {notification}
+                    {notificationStatusToText(notification)}
                   </Text>
                 </View>
               </TouchableOpacity>

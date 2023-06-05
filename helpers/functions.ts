@@ -1,4 +1,6 @@
 import { baseServerUrl } from "../constants/Config";
+import { NotificationText } from "../constants/Constants";
+import type { NotificationStatus } from "../constants/Types";
 
 const deleteNotificationEndpoint = "/clearNotification";
 export async function deleteNotification(deviceName: string, index: number) {
@@ -18,4 +20,9 @@ export async function deleteNotification(deviceName: string, index: number) {
       // console.error("Device not found.");
       return;
     });
+}
+
+// TODO: could work better with switch case
+export function notificationStatusToText(status: NotificationStatus) {
+  return NotificationText[status];
 }
