@@ -1,10 +1,14 @@
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { useCallback, useEffect, useState } from "react";
+import { useImmer } from "use-immer";
 
 import EditScreenInfo from "../../components/EditScreenInfo";
 import { Text, View } from "../../components/Themed";
 import Colors from "../../constants/Colors";
-import type { NotificationResponse } from "../../constants/Types";
+import type {
+  NotificationType,
+  NotificationResponse,
+} from "../../constants/Types";
 import { useInterval } from "../../hooks/useInterval";
 import Notification from "../../components/Notification";
 
@@ -36,6 +40,8 @@ async function getNotifications(deviceName: string) {
 
 export default function MainScreen() {
   const [devices, setDevices] = useState<string[]>([]);
+  const [notifications, setNotifications] = useImmer<NotificationType[]>([]);
+  // const [];
 
   // Fetch devices on mount/page load
   useEffect(() => {
@@ -47,9 +53,22 @@ export default function MainScreen() {
     fetchDevices().catch((err) => console.log(err));
   }, []);
 
+  const fetchNotifications = useCallback(async () => {
+    const data = await fetch(baseServerUrl + "/allNotifications");
+    const devicesJson: NotificationType[] = await data.json();
+    setNotifications(devicesJson);
+    // console.log("Notis:", devicesJson[0].notifications);
+  }, [setNotifications]);
+
+  // Load notificationson page load (without waiting for next interval)
+  useEffect(() => {
+    fetchNotifications();
+  }, [fetchNotifications]);
+
   // Get notifications in interval
   useInterval(() => {
     // getDevices();
+    fetchNotifications();
   }, 1500);
 
   const testArr = [
@@ -58,18 +77,20 @@ export default function MainScreen() {
   ];
   return (
     <View style={styles.container}>
-      <View style={styles.notificationContainer}>
-        {devices.map((name, index) => {
+      <ScrollView
+        contentContainerStyle={styles.notificationContainer}
+        style={styles.notificationContainerStyle}
+      >
+        {notifications.map((notification, index) => {
           return (
             <Notification
-              deviceName={name}
-              notificationAmount={0}
-              notifications={testArr}
+              deviceName={notification.name}
+              notifications={notification.notifications}
               key={index}
             />
           );
         })}
-      </View>
+      </ScrollView>
       {/* <View style={styles.green}>
         <TouchableOpacity
           style={[styles.buttonColorContainer, styles.red]}
@@ -119,7 +140,11 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    width: "100%",
     gap: 24,
+    marginVertical: 32,
+  },
+  notificationContainerStyle: {
+    width: "100%",
+    // paddingBottom: 20,
   },
 });

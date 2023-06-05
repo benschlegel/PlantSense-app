@@ -6,15 +6,14 @@ import Hr from "./Hr";
 
 type NotificationProps = {
   deviceName: string;
-  notificationAmount: number;
-  notifications: string[];
+  notifications: number[];
 };
 
 export default function Notification({
   deviceName,
-  notificationAmount,
   notifications,
 }: NotificationProps) {
+  const notificationAmount = notifications.length;
   return (
     <View style={styles.notificationContainer}>
       <View style={styles.notificationTopRow}>
@@ -29,12 +28,12 @@ export default function Notification({
       <View style={styles.notificationBubble}>
         {notifications.map((notification, index) => {
           return (
-            <>
+            <View key={index}>
               <View style={styles.singleNotificationContainer}>
                 <Text style={styles.notificationInfoText}>{notification}</Text>
               </View>
-              {index === 0 && <Hr />}
-            </>
+              {index < notificationAmount - 1 && <Hr key={index + 10} />}
+            </View>
           );
         })}
       </View>

@@ -15,5 +15,7 @@ const styles = StyleSheet.create({
     opacity: 0.7,
     backgroundColor: Colors.light.light,
     borderRadius: 2,
+    // marginHorizontal: 8,
+    // justifyContent: "center",
   },
 });
