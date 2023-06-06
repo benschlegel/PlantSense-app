@@ -21,6 +21,5 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.light.light,
     borderRadius: 2,
     // marginHorizontal: 8,
-    // justifyContent: "center",
   },
 });
