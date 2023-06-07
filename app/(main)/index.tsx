@@ -5,9 +5,11 @@ import {
   TouchableOpacity,
 } from "react-native";
 import AnimatedLottieView from "lottie-react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { Link } from "expo-router";
+import * as Location from "expo-location";
+import Netinfo from "@react-native-community/netinfo";
 
 import EditScreenInfo from "../../components/EditScreenInfo";
 import { Text, View } from "../../components/Themed";
@@ -24,6 +26,21 @@ function TabBarIcon(props: {
 }
 
 export default function MainScreen() {
+  const [permission, requestPermission] = Location.useForegroundPermissions();
+
+  // useEffect(() => {
+  //   // Request permission on component mount
+  //   // Netinfo.configure({ shouldFetchWiFiSSID: true });
+  //   requestPermission();
+  // }, [requestPermission]);
+
+  // const unsubscribe = Netinfo.addEventListener((state) => {
+  //   if (permission?.granted === true) {
+  //     console.log("Connection type: ", state.type);
+  //     console.log("Connection type: ", state.details);
+  //   }
+  // });
+
   return (
     <>
       <View style={styles.container}>

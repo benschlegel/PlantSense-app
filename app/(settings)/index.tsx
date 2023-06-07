@@ -1,6 +1,6 @@
 import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import AnimatedLottieView from "lottie-react-native";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 
 import EditScreenInfo from "../../components/EditScreenInfo";
 import { Text, View } from "../../components/Themed";
@@ -95,6 +95,12 @@ async function getNotifications() {
 }
 
 export default function SettingsScreen() {
+  useEffect(() => {
+    console.log("Component mount");
+    return () => {
+      console.log("Component did unmount");
+    };
+  }, []);
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Trigger States</Text>
