@@ -25,7 +25,8 @@ export {
 // eslint-disable-next-line camelcase
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: "(main)",
+  // Change default route in `index.tsx`
+  initialRouteName: "index",
 };
 
 export default function RootLayout() {
@@ -72,7 +73,16 @@ function RootLayoutNav() {
     <>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="(main)" />
+          {/* <Stack.Screen name="(main)" /> */}
+          <Stack.Screen
+            name="(setup)"
+            options={{
+              headerShown: true,
+              title: "Setup",
+              headerStyle: { backgroundColor: Colors.light.primary2 },
+              headerTintColor: "#fff",
+            }}
+          />
           <Stack.Screen
             name="(notifications)"
             options={{
