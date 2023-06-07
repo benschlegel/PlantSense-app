@@ -45,7 +45,6 @@ async function getNotifications(deviceName: string) {
 }
 
 export default function MainScreen() {
-  const [devices, setDevices] = useState<string[]>([]);
   const [notifications, setNotifications] = useImmer<NotificationType[]>([]);
 
   const [refreshing, setRefreshing] = useState(false);
@@ -55,22 +54,6 @@ export default function MainScreen() {
     setTimeout(() => {
       setRefreshing(false);
     }, 650);
-  }, []);
-  // const [];
-
-  // Fetch devices on mount/page load
-  // TODO: remove (+ state vars), already covered by fetchNotifications
-  useEffect(() => {
-    const fetchDevices = async () => {
-      try {
-        const data = await fetch(baseServerUrl + "/devices");
-        const devicesJson: string[] = await data.json();
-        setDevices(devicesJson);
-      } catch (err) {
-        console.log("Error while fetching notifications: ", err);
-      }
-    };
-    fetchDevices().catch((err) => console.log(err));
   }, []);
 
   const fetchNotifications = useCallback(async () => {
@@ -91,10 +74,6 @@ export default function MainScreen() {
     fetchNotifications();
   }, 1500);
 
-  const testArr = [
-    "Plant has been exposed to too much sunlight. Please move the plant.",
-    "Plant is thirsty. Please water the plant.",
-  ];
   return (
     <View style={styles.container}>
       <ScrollView
