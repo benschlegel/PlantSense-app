@@ -17,8 +17,8 @@ import type {
 import { NotificationStatus } from "../../constants/Types";
 import { useInterval } from "../../hooks/useInterval";
 import Notification from "../../components/Notification";
+import { baseServerUrl } from "../../constants/Config";
 
-const baseServerUrl = "http://192.168.141.24";
 const notificationsEndpoint = "/notifications";
 
 async function getNotifications(deviceName: string) {

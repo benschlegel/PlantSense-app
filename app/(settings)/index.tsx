@@ -141,11 +141,12 @@ export default function SettingsScreen() {
           onPress={() => sendLedRequest(255, 0, 0)}
         />
   */}
-        {/* <StyledButton
+        <StyledButton
           title="purple"
           buttonStyle={{ backgroundColor: "purple" }}
-          onPress={() => sendLedRequest(255, 0, 255)}
-        /> */}
+          onPress={() => sendLedRequest(255, 63, 0)}
+          // onPress={() => sendLedRequest(0, 255, 0)}
+        />
         <Hr style={styles.hrStyle} />
         <StyledButton
           title="Too much water"
