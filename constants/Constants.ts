@@ -1,9 +1,9 @@
 // Notification text for "NotificationStatus" enum (used to convert status code to text)
 export const NotificationText = [
-  "Plant is thirsty. Please water the plant.",
-  "Plant has been watered too much. Please don't water it for a while.",
-  "Plant has been exposed to too much sunlight. Please move the plant.",
-  "Plant needs more sunlight. Please move the plant.",
-  "Plant needs more fertilizer. Please add more.",
-  "Plant has too much fertilizer. Please inspect the soil.",
+  "Your plant requires water. Please water the plant.",
+  "Your plant has been watered too much. Please remove excess water if possible",
+  "Your plant has been exposed to too much sunlight. Please move the plant.",
+  "Your plant needs more sunlight. Please move the plant.",
+  "Your plant needs more fertilizer. Please add more.",
+  "Your plant has too much fertilizer. Please inspect the soil.",
 ];
