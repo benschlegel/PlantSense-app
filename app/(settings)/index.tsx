@@ -1,6 +1,7 @@
 import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import AnimatedLottieView from "lottie-react-native";
 import { useCallback, useEffect } from "react";
+import { Link } from "expo-router";
 
 import EditScreenInfo from "../../components/EditScreenInfo";
 import { Text, View } from "../../components/Themed";
@@ -145,6 +146,12 @@ export default function SettingsScreen() {
           title="Turn off LED"
           onPress={() => sendLedRequest(0, 0, 0)}
         />
+        <Link href="/(setup)" asChild style={{ marginBottom: 20 }}>
+          <StyledButton
+            title="Go to setup"
+            onPress={() => sendLedRequest(0, 0, 0)}
+          />
+        </Link>
       </ScrollView>
       {/* <View style={styles.green}>
         <TouchableOpacity
