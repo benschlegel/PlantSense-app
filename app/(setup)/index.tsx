@@ -68,7 +68,7 @@ export default function Setup() {
         </View>
         <StyledButton
           title="Scan for devices"
-          textStyle={{ color: Colors.light.dark, opacity: 0.9 }}
+          textStyle={{ color: "#000", opacity: 0.9, fontSize: 15.5 }}
           buttonStyle={{
             width: "87%",
             marginBottom: 22,
