@@ -45,9 +45,7 @@ async function getNotifications(deviceName: string) {
 }
 
 export default function MainScreen() {
-  const [notifications, setNotifications] = useState<NotificationType[]>([
-    { name: "Planty", notifications: [0, 1] },
-  ]);
+  const [notifications, setNotifications] = useState<NotificationType[]>([]);
 
   const [refreshing, setRefreshing] = useState(false);
 
