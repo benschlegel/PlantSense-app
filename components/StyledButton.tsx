@@ -9,6 +9,7 @@ type StyledButtonProps = {
   buttonStyle?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
   onPress?: () => void;
+  disabled?: boolean;
 };
 
 export default function StyledButton({
@@ -17,11 +18,17 @@ export default function StyledButton({
   textStyle,
   containerStyle,
   onPress,
+  disabled,
 }: StyledButtonProps) {
   return (
     <View style={[styles.container, containerStyle]}>
       <TouchableOpacity
-        style={[styles.buttonColorContainer, buttonStyle]}
+        disabled={disabled}
+        style={[
+          styles.buttonColorContainer,
+          buttonStyle,
+          disabled && styles.disabledStyle,
+        ]}
         onPress={onPress}
       >
         <Text style={textStyle ? textStyle : styles.textStyle}>{title}</Text>
@@ -49,5 +56,8 @@ const styles = StyleSheet.create({
   textStyle: {
     color: Colors.light.light,
     fontSize: 16,
+  },
+  disabledStyle: {
+    opacity: 0.45,
   },
 });

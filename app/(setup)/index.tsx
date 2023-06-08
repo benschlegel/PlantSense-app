@@ -1,22 +1,51 @@
 import { StyleSheet, Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Link } from "expo-router";
 
 import Colors from "../../constants/Colors";
 import StyledButton from "../../components/StyledButton";
+import { getDeviceAvailable } from "../../helpers/functions";
 
-export default function index() {
+// How many times to attempt connection to esp for
+const connectionAttemps = 5;
+export default function Setup() {
+  const [isDeviceAvailable, setIsDeviceAvailable] = useState(false);
+
+  useEffect(() => {
+    //
+  }, []);
+  function checkAvailable() {
+    for (let i = 0; i < connectionAttemps; i++) {
+      const isAvailable = getDeviceAvailable();
+      if (isAvailable) {
+        setIsDeviceAvailable(true);
+        break;
+      }
+    }
+  }
   return (
     <View style={styles.container}>
       <Text style={styles.headerText}>Connect to your device</Text>
       <View style={styles.topContainer}>
         <Text>Test</Text>
-        <Text>Test</Text>
+        <Text>{"Device available: " + isDeviceAvailable}</Text>
       </View>
       <View style={styles.buttonContainer}>
         <StyledButton
-          title="Skip"
-          buttonStyle={[styles.buttonStyle, styles.secondaryButton]}
+          title="Scan for devices"
+          onPress={() => checkAvailable()}
         />
-        <StyledButton title="Next" buttonStyle={styles.buttonStyle} />
+        <Link href="/(main)" asChild>
+          <StyledButton title="Skip" buttonStyle={[styles.secondaryButton]} />
+        </Link>
+        <Link href="/(config)" asChild>
+          <StyledButton
+            title="Next"
+            buttonStyle={styles.buttonStyleDark}
+            // disabled={!isDeviceAvailable}
+            disabled={false}
+          />
+        </Link>
       </View>
     </View>
   );
@@ -35,25 +64,20 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   buttonContainer: {
-    width: "100%",
-    backgroundColor: "red",
-    marginBottom: 50,
-    marginTop: 20,
-    marginHorizontal: 4,
-    flexDirection: "row",
+    gap: 16,
+    // alignItems: "flex-end",
   },
-  buttonStyle: {
-    width: 110,
-    height: 45,
+  buttonStyleDark: {
     backgroundColor: Colors.light.dark,
-    borderRadius: 16,
   },
   secondaryButton: {
-    backgroundColor: Colors.light.light,
+    backgroundColor: Colors.light.primary2,
+    // alignSelf: "flex-start",
   },
   headerText: {
     fontWeight: "bold",
     color: Colors.light.dark,
     fontSize: 26,
+    opacity: 0.8,
   },
 });
