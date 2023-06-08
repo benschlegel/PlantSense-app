@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import React, { useState } from "react";
 import { Link } from "expo-router";
 
@@ -26,17 +26,17 @@ export default function ColorsScreen() {
         <Text style={styles.subheaderText}>
           Pick predefined color or choose your own
         </Text>
-        <View style={styles.configContainer}>
+        <ScrollView contentContainerStyle={styles.configContainer}>
           <StyledButton
-            title="Purple"
-            buttonStyle={[styles.nextButton, styles.purple]}
+            title="Pink"
+            buttonStyle={[styles.nextButton, styles.brown]}
             onPress={() => sendLedRequest(255, 16, 25)}
             disabled={false}
           />
           <StyledButton
-            title="Pink"
-            buttonStyle={[styles.nextButton, styles.brown]}
-            onPress={() => sendLedRequest(255, 255, 0)}
+            title="Purple"
+            buttonStyle={[styles.nextButton, styles.purple]}
+            onPress={() => sendLedRequest(170, 27, 255)}
             disabled={false}
           />
           <StyledButton
@@ -54,7 +54,7 @@ export default function ColorsScreen() {
               placeholderTextColor={Colors.light.background}
               value={red}
               onChangeText={setRed}
-              keyboardType={"numeric"}
+              // keyboardType={"numeric"}
             />
           </View>
           <View style={styles.inputContainer}>
@@ -65,7 +65,7 @@ export default function ColorsScreen() {
               selectionColor={Colors.light.background}
               placeholderTextColor={Colors.light.background}
               value={green}
-              keyboardType={"numeric"}
+              // keyboardType={"numeric"}
               onChangeText={setGreen}
             />
           </View>
@@ -76,12 +76,12 @@ export default function ColorsScreen() {
               placeholder="0-255"
               placeholderTextColor={Colors.light.background}
               value={blue}
-              keyboardType={"numeric"}
+              // keyboardType={"numeric"}
               onChangeText={setBlue}
             />
           </View>
           {/* <Text>{"SSID: " + ssidInput}</Text> */}
-        </View>
+        </ScrollView>
       </View>
       <View style={styles.nextContainer}>
         {/* <Link href={"/(main)"} asChild> */}
@@ -116,6 +116,7 @@ const styles = StyleSheet.create({
   configContainer: {
     marginTop: 30,
     gap: 24,
+    paddingBottom: 20,
   },
   inputContainer: {
     display: "flex",
