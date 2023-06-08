@@ -45,7 +45,9 @@ async function getNotifications(deviceName: string) {
 }
 
 export default function MainScreen() {
-  const [notifications, setNotifications] = useImmer<NotificationType[]>([]);
+  const [notifications, setNotifications] = useState<NotificationType[]>([
+    { name: "Planty", notifications: [0, 1] },
+  ]);
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -59,6 +61,7 @@ export default function MainScreen() {
   const fetchNotifications = useCallback(async () => {
     const data = await fetch(baseServerUrl + "/allNotifications");
     const devicesJson: NotificationType[] = await data.json();
+    // console.log(devicesJson);
     setNotifications(devicesJson);
     // console.log("Notis:", devicesJson[0].notifications);
   }, [setNotifications]);
