@@ -12,32 +12,7 @@ import type {
 import { baseServerUrl } from "../../constants/Config";
 import StyledButton from "../../components/StyledButton";
 import Hr from "../../components/Hr";
-
-const ledEndpoint = "/led";
-
-async function sendLedRequest(red: number, green: number, blue: number) {
-  const payload = {
-    red: red,
-    green: green,
-    blue: blue,
-  };
-
-  // Send post request to esp
-  fetch(baseServerUrl + ledEndpoint, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
-  })
-    .then((response) => response.json())
-    .then((result) => {
-      console.log("Success:", result);
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
-}
+import { sendLedRequest } from "../../helpers/functions";
 
 async function sendSetStateRequest(state: NotificationStatus) {
   const payload = {

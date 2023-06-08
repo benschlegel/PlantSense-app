@@ -112,3 +112,28 @@ export async function setDeviceConfig(
 export function notificationStatusToText(status: NotificationStatus) {
   return NotificationText[status];
 }
+
+export async function sendLedRequest(red: number, green: number, blue: number) {
+  const ledEndpoint = "/led";
+  const payload = {
+    red: red,
+    green: green,
+    blue: blue,
+  };
+
+  // Send post request to esp
+  fetch(baseServerUrl + ledEndpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  })
+    .then((response) => response.json())
+    .then((result) => {
+      console.log("Success:", result);
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+}

@@ -28,19 +28,6 @@ function TabBarIcon(props: {
 export default function MainScreen() {
   const [permission, requestPermission] = Location.useForegroundPermissions();
 
-  // useEffect(() => {
-  //   // Request permission on component mount
-  //   // Netinfo.configure({ shouldFetchWiFiSSID: true });
-  //   requestPermission();
-  // }, [requestPermission]);
-
-  // const unsubscribe = Netinfo.addEventListener((state) => {
-  //   if (permission?.granted === true) {
-  //     console.log("Connection type: ", state.type);
-  //     console.log("Connection type: ", state.details);
-  //   }
-  // });
-
   return (
     <>
       <View style={styles.container}>
@@ -85,13 +72,15 @@ export default function MainScreen() {
         )}
         {/* </View> */}
         <View style={styles.green}>
-          <TouchableOpacity
-            // href={"/notifications"}
-            style={styles.buttonColorContainer}
-            onPress={() => console.log("change colors was pressed")}
-          >
-            <Text>Change Colors</Text>
-          </TouchableOpacity>
+          <Link href="/(colors)" asChild>
+            <TouchableOpacity
+              // href={"/notifications"}
+              style={styles.buttonColorContainer}
+              onPress={() => console.log("change colors was pressed")}
+            >
+              <Text>Change Colors</Text>
+            </TouchableOpacity>
+          </Link>
         </View>
       </View>
     </>
