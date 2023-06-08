@@ -9,19 +9,25 @@ import { getDeviceAvailable } from "../../helpers/functions";
 // How many times to attempt connection to esp for
 const connectionAttemps = 5;
 export default function Setup() {
-  const [isDeviceAvailable, setIsDeviceAvailable] = useState(false);
+  const [isDeviceAvailable, setIsDeviceAvailable] = useState<
+    undefined | boolean
+  >(undefined);
 
   useEffect(() => {
     //
   }, []);
-  function checkAvailable() {
+  async function checkAvailable() {
+    let isAvailable = false;
     for (let i = 0; i < connectionAttemps; i++) {
-      const isAvailable = getDeviceAvailable();
+      // Override isAvailable: true, if successful (and break)
+      isAvailable = await getDeviceAvailable();
       if (isAvailable) {
-        setIsDeviceAvailable(true);
         break;
       }
     }
+
+    // set to isAvailable (true, if got response and false by default)
+    setIsDeviceAvailable(isAvailable);
   }
   return (
     <View style={styles.container}>

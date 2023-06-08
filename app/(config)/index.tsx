@@ -4,12 +4,24 @@ import React, { useState } from "react";
 import Colors from "../../constants/Colors";
 import Hr from "../../components/Hr";
 import StyledButton from "../../components/StyledButton";
+import { setDeviceConfig } from "../../helpers/functions";
 
 export default function Config() {
-  const [hostInput, setHostInput] = useState<string>();
-  const [ssidInput, setSsidInput] = useState<string>();
-  const [passwordInput, setPasswordInput] = useState<string>();
-  const [isConfigSetSuccess, setIsConfigSetSuccess] = useState(false);
+  const [hostInput, setHostInput] = useState<string>("");
+  const [ssidInput, setSsidInput] = useState<string>("");
+  const [passwordInput, setPasswordInput] = useState<string>("");
+  const [isConfigSetSuccess, setIsConfigSetSuccess] = useState<
+    undefined | boolean
+  >(undefined);
+
+  async function sendConfig() {
+    const wasSuccessful = await setDeviceConfig(
+      hostInput,
+      ssidInput,
+      passwordInput
+    );
+    setIsConfigSetSuccess(wasSuccessful);
+  }
 
   return (
     <View style={styles.container}>
@@ -56,15 +68,22 @@ export default function Config() {
             title="Set config"
             disabled={!ssidInput || !passwordInput || !hostInput}
             buttonStyle={{ width: "100%" }}
+            onPress={() => sendConfig()}
           />
         </View>
-        {isConfigSetSuccess && (
-          <View style={styles.successContainer}>
+
+        <View style={styles.successContainer}>
+          {isConfigSetSuccess === false && (
+            <Text style={styles.successText}>
+              Device setup failed. Please correct config and try again.
+            </Text>
+          )}
+          {isConfigSetSuccess === true && (
             <Text style={styles.successText}>
               Device setup was successful! You can now continue.
             </Text>
-          </View>
-        )}
+          )}
+        </View>
       </View>
       <View style={styles.nextContainer}>
         <StyledButton
