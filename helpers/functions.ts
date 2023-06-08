@@ -76,38 +76,36 @@ export async function setDeviceConfig(
     ssid: ssid,
     password: password,
   };
-  try {
-    let isSetHostSuccess = false;
-    let isSetCredentialsSuccess = false;
 
-    // Send '/setHost' request
-    await fetch(setupServerUrl + "/setHost", {
+  // define '/setHost' and '/setCredentials' fetch requests
+  const fetches = [
+    fetch(setupServerUrl + "/setHost", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(hostPayload),
-    }).then(() => {
-      isSetHostSuccess = true;
-    });
-
-    // Send '/setCredentials' request
-    await fetch(setupServerUrl + "/setCredentials", {
+    }),
+    fetch(setupServerUrl + "/setCredentials", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(credentialsPayload),
-    }).then(() => {
-      isSetCredentialsSuccess = true;
-    });
+    }),
+  ];
 
-    return isSetHostSuccess && isSetCredentialsSuccess;
-  } catch (error) {
-    // return false, if not successful
-    console.log("Error:", error);
-    return false;
-  }
+  const resultPromise = new Promise<boolean>((resolve, reject) => {
+    Promise.all(fetches)
+      .then(() => {
+        resolve(true);
+      })
+      .catch((err) => {
+        console.error("Error while setting device config: ", err);
+        resolve(false);
+      });
+  });
+  return resultPromise;
 }
 
 // TODO: could work better with switch case

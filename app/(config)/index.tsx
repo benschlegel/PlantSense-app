@@ -1,5 +1,6 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import React, { useState } from "react";
+import { Link } from "expo-router";
 
 import Colors from "../../constants/Colors";
 import Hr from "../../components/Hr";
@@ -86,11 +87,13 @@ export default function Config() {
         </View>
       </View>
       <View style={styles.nextContainer}>
-        <StyledButton
-          title="Next"
-          buttonStyle={styles.nextButton}
-          disabled={!isConfigSetSuccess}
-        />
+        <Link href={"/(main)"} asChild>
+          <StyledButton
+            title="Next"
+            buttonStyle={styles.nextButton}
+            disabled={!isConfigSetSuccess}
+          />
+        </Link>
       </View>
     </View>
   );

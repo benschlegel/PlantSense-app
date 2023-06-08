@@ -48,8 +48,7 @@ export default function Setup() {
           <StyledButton
             title="Next"
             buttonStyle={styles.buttonStyleDark}
-            // disabled={!isDeviceAvailable}
-            disabled={false}
+            disabled={!isDeviceAvailable}
           />
         </Link>
       </View>
