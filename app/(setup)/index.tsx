@@ -48,22 +48,34 @@ export default function Setup() {
         {isDeviceAvailable ? deviceFoundText : defaultText}
       </Text>
       <View style={styles.topContainer}>
-        {isDeviceAvailable && (
-          <View style={styles.deviceContainer}>
-            <View style={styles.plantContainer}>
-              <Text style={[styles.deviceText, { fontWeight: "bold" }]}>
-                PlantSense - Planty
-              </Text>
+        <View style={{ flex: 1 }}>
+          {isDeviceAvailable && (
+            <View style={styles.deviceContainer}>
+              <View style={styles.plantContainer}>
+                <Text style={[styles.deviceText, { fontWeight: "bold" }]}>
+                  PlantSense - Planty
+                </Text>
+              </View>
             </View>
-          </View>
-        )}
-        {isScanActive && (
-          <View style={styles.deviceContainer}>
-            <View style={styles.plantContainer}>
-              <Text style={styles.deviceText}>Scanning...</Text>
+          )}
+          {isScanActive && (
+            <View style={styles.deviceContainer}>
+              <View style={styles.plantContainer}>
+                <Text style={styles.deviceText}>Scanning...</Text>
+              </View>
             </View>
-          </View>
-        )}
+          )}
+        </View>
+        <StyledButton
+          title="Scan for devices"
+          textStyle={{ color: Colors.light.dark, opacity: 0.9 }}
+          buttonStyle={{
+            width: "87%",
+            marginBottom: 22,
+            backgroundColor: Colors.light.background,
+          }}
+          onPress={() => checkAvailable()}
+        />
       </View>
       <View style={styles.deviceNotFoundContainer}>
         <Text style={{ color: Colors.light.dark }}>{"Device not found? "}</Text>
@@ -72,19 +84,19 @@ export default function Setup() {
         </Text>
       </View>
       <View style={styles.buttonContainer}>
-        <StyledButton
-          title="Scan for devices"
-          // buttonStyle={{ width: "100%" }}
-          onPress={() => checkAvailable()}
-        />
         <Link href="/(main)" asChild>
-          <StyledButton title="Skip" buttonStyle={[styles.secondaryButton]} />
+          <StyledButton
+            title="Skip"
+            buttonStyle={[styles.secondaryButton]}
+            containerStyle={{ width: 200, alignItems: "flex-start" }}
+          />
         </Link>
         <Link href="/(config)" asChild>
           <StyledButton
             title="Next"
-            buttonStyle={styles.buttonStyleDark}
+            buttonStyle={[styles.buttonStyleDark, { marginRight: 40 }]}
             disabled={!isDeviceAvailable}
+            containerStyle={{ width: 200, marginRight: 20 }}
           />
         </Link>
       </View>
@@ -109,8 +121,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   buttonContainer: {
-    gap: 16,
-    // alignItems: "flex-end",
+    // backgroundColor: "red",
+    // gap: 16,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    marginBottom: 20,
   },
   buttonStyleDark: {
     backgroundColor: Colors.light.dark,
@@ -147,7 +164,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     marginTop: -12,
-    marginBottom: 20,
+    marginBottom: 50,
     marginLeft: 10,
   },
 });
