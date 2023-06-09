@@ -14,6 +14,9 @@ import Netinfo from "@react-native-community/netinfo";
 import EditScreenInfo from "../../components/EditScreenInfo";
 import { Text, View } from "../../components/Themed";
 import Colors from "../../constants/Colors";
+import HappyPlanty from "../../assets/lottie/Planty_happy_led.json";
+import SadPlanty from "../../assets/lottie/Planty_sad_led.json";
+import HappyPlantyDefault from "../../assets/lottie/Planty_new.json";
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>["name"];
@@ -60,7 +63,7 @@ export default function MainScreen() {
 
         {/* Planty animation on main screen, now works on both ios and android */}
         <AnimatedLottieView
-          source={require("../../assets/lottie/Planty_happy_led.json")}
+          source={HappyPlanty}
           autoPlay
           loop
           speed={0.95}
