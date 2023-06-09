@@ -60,11 +60,17 @@ export default function MainScreen() {
 
         {/* Planty animation on main screen, now works on both ios and android */}
         <AnimatedLottieView
-          source={require("../../assets/lottie/Planty_new.json")}
+          source={require("../../assets/lottie/Planty_happy_led.json")}
           autoPlay
           loop
           speed={0.95}
           style={styles.absolute}
+          colorFilters={[
+            {
+              keypath: "LEDs fill",
+              color: "#AD7BE9",
+            },
+          ]}
         />
 
         <View style={styles.green}>
