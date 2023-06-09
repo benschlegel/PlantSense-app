@@ -27,6 +27,7 @@ function TabBarIcon(props: {
 }
 
 export default function MainScreen() {
+  // TODO: remove permissions
   const [permission, requestPermission] = Location.useForegroundPermissions();
 
   return (
