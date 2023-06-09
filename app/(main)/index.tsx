@@ -15,8 +15,6 @@ import EditScreenInfo from "../../components/EditScreenInfo";
 import { Text, View } from "../../components/Themed";
 import Colors from "../../constants/Colors";
 
-const isAnimationEnabled = true;
-
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>["name"];
   color: string;
@@ -59,18 +57,16 @@ export default function MainScreen() {
           </View>
           <View style={styles.infoContainer}>{/* <Text>Test</Text> */}</View>
         </View>
-        {/* <View style={{ paddingHorizontal: 200, paddingVertical: 200 }}> */}
-        {Platform.OS === "ios" && isAnimationEnabled && (
-          // <View pointerEvents="none">
-          <AnimatedLottieView
-            source={require("../../assets/lottie/Pothos.json")}
-            autoPlay
-            loop
-            speed={0.95}
-            style={styles.absolute}
-          />
-        )}
-        {/* </View> */}
+
+        {/* Planty animation on main screen, now works on both ios and android */}
+        <AnimatedLottieView
+          source={require("../../assets/lottie/Planty_new.json")}
+          autoPlay
+          loop
+          speed={0.95}
+          style={styles.absolute}
+        />
+
         <View style={styles.green}>
           <Link href="/(colors)" asChild>
             <TouchableOpacity
