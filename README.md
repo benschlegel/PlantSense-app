@@ -7,11 +7,7 @@ After cloning the project, run:
 ```bash
 npm install
 ```
-
-Next, run:
-```bash
-npx expo install
-```
+If you are using vscode and files still show red warnings, try reloading the window.
 
 To start the project, run:
 ```bash
