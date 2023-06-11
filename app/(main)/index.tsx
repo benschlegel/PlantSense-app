@@ -8,8 +8,6 @@ import AnimatedLottieView from "lottie-react-native";
 import React, { useEffect } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { Link } from "expo-router";
-import * as Location from "expo-location";
-import Netinfo from "@react-native-community/netinfo";
 
 import EditScreenInfo from "../../components/EditScreenInfo";
 import { Text, View } from "../../components/Themed";
@@ -27,9 +25,6 @@ function TabBarIcon(props: {
 }
 
 export default function MainScreen() {
-  // TODO: remove permissions
-  const [permission, requestPermission] = Location.useForegroundPermissions();
-
   return (
     <>
       <View style={styles.container}>
