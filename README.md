@@ -15,7 +15,7 @@ After cloning the project, run:
 ```bash
 npm install
 ```
-If you are using vscode and files still show red warnings, try reloading the window.
+If you are using vscode and still see errors/warnings in your files, try reloading the window.
 
 To start the project, run:
 ```bash
@@ -47,27 +47,35 @@ This section goes into detail of how the project/app is structured.
 
 ---
 
-* **📁`app`:** Contains main component (`App.tsx`), entry point of app.
+* **📁`app`:** Contains main layout (`app/_layout.tsx`), entry point of app.
 
   * *📄 `app/_layout.tsx`:* Contains the entry point of the app. Also responsible for registering screens and loading fonts.
   * *📄 `app/index.tsx`:* Contains a redirect to control which screen gets loaded first.
 
 ---
 
-This section is not completed/acurate yet.
+* **📁`routes`:** Contains components that are used in main `App.tsx`.
 
-* **📁`components`:** Contains components that are used in main `App.tsx`.
+  * *📁 `app/main`:* Main screen of the app. Contains plant animation and notification/settings button.
 
-  * *📄 `components/Header.tsx`:* Simple header on top of app, displays name of current list (with option to return to list selection screen).
+  * *📁 `app/setup`:* Screen for initial setup. Will be skipped automatically once setup has been completed once.
 
-  * *📄 `components/Input.tsx`:* Used to add new items to list, input component on bottom of screen.
-
-  * *📄`components/ListItem.tsx`:* Single item in list, can be deleted by swiping. Also contains logic for deleting item.
+  * *📁`app/notifications`:* View all notifications of your devices. Automatically refreshes to fetch new notifications.
 
 ---
-* **📁`types`:** Contains global types (mainly `Item` interface).
+* **📁`components`:** Contains all reusable and customizable components of this project. Some notable ones listed below.
 
-  * *📄`index.d.ts`:* Global types/interfaces and styles.
+  * *📄`StyledText`:* `<Text>` component with set font-family. Can be passed `TextProps` to customize. Use everywhere instead of regular `<Text>` component
+  * *📄`StyledButton`:* Drop-in styled replacement for `<PressableOpacity>`.
+
+---
+
+* **📁`constants`:** Contains configurable project constants like `Color` settings, ty and more
+
+* **📁`helpers`:** Contains functions that are needed by multiple components. This includes functions that use `fetch` to make `http` network requests.
+
+* **📁`assets`:** Contains project assets like `fonts` and `images`.
+  * *📁`assets/lottie`:* Contains lottie animation files.
 
 ---
 * **📁`other`:** Configuration files
@@ -75,3 +83,5 @@ This section is not completed/acurate yet.
   * *📄`.eslintrc.js`:* Contains eslint config for project
 
   * *📄`app.json`:* Defines `expo`-configuration like `entryPoint`, `jsEngine`, app name etc.
+
+  * *📄`.gitattributes`:* gitattributes config, contains settings to set `EoL` (end of line) for every file so project can be used both on windows and mac/linux.
