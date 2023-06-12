@@ -1,10 +1,12 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import {
   baseServerUrl,
   demoStringDeviceName,
   setupServerUrl,
 } from "../constants/Config";
 import { NotificationText } from "../constants/Constants";
-import type { NotificationStatus } from "../constants/Types";
+import type { DeviceInfo, NotificationStatus } from "../constants/Types";
 
 const deleteNotificationEndpoint = "/clearNotification";
 export async function deleteNotification(deviceName: string, index: number) {
@@ -136,4 +138,49 @@ export async function sendLedRequest(red: number, green: number, blue: number) {
     .catch((error) => {
       console.error("Error:", error);
     });
+}
+
+/**
+ * Get all devices from storage
+ * @returns promise of all devices
+ */
+export async function getDevicesFromStorage(): Promise<DeviceInfo[]> {
+  try {
+    const jsonValue = await AsyncStorage.getItem("devices");
+    return jsonValue != null ? JSON.parse(jsonValue) : [];
+  } catch (e) {
+    console.error("Error while reading from storage: ", e);
+  }
+  return [];
+}
+
+/**
+ * Add new device to storage without overriding old ones.
+ * If no devices are stored yet, creates a new array and pushes entry.
+ * @param device new device to add to storage
+ */
+export async function addDeviceToStorage(device: DeviceInfo) {
+  try {
+    // Get old items from storage, push new entry and save item to storage
+    AsyncStorage.getItem("devices").then((devices) => {
+      const d = devices ? JSON.parse(devices) : [];
+      d.push(device);
+      AsyncStorage.setItem("devices", JSON.stringify(d));
+    });
+  } catch (e) {
+    console.error("Error while writing to storage: ", e);
+  }
+}
+
+/**
+ * Overrides all devices and saves them to storage.
+ * @param devices new list of devices to save/override to storage.
+ */
+export async function saveDevicesToStorage(devices: DeviceInfo[]) {
+  try {
+    const jsonValue = JSON.stringify(devices);
+    await AsyncStorage.setItem("devices", jsonValue);
+  } catch (e) {
+    console.error("Error while writing to storage: ", e);
+  }
 }

@@ -14,3 +14,8 @@ export enum NotificationStatus {
   HIGH_SOIL,
   NONE = -1,
 }
+
+export type DeviceInfo = {
+  host: string;
+  deviceName: string;
+};
