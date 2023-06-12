@@ -24,6 +24,13 @@ function TabBarIcon(props: {
   return <FontAwesome size={props.iconSize} {...props} />;
 }
 
+async function testDNS() {
+  await fetch("http://PlantSense.local").then((res) => {
+    const { status } = res;
+    console.log("Received status code: ", status);
+  });
+}
+
 export default function MainScreen() {
   return (
     <>
@@ -73,15 +80,15 @@ export default function MainScreen() {
         />
 
         <View style={styles.green}>
-          <Link href="/(colors)" asChild>
-            <TouchableOpacity
-              // href={"/notifications"}
-              style={styles.buttonColorContainer}
-              onPress={() => console.log("change colors was pressed")}
-            >
-              <Text>Change Colors</Text>
-            </TouchableOpacity>
-          </Link>
+          {/* <Link href="/(colors)" asChild> */}
+          <TouchableOpacity
+            // href={"/notifications"}
+            style={styles.buttonColorContainer}
+            onPress={() => testDNS()}
+          >
+            <Text>Change Colors</Text>
+          </TouchableOpacity>
+          {/* </Link> */}
         </View>
       </View>
     </>
