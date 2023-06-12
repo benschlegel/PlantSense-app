@@ -12,10 +12,13 @@ import {
   setVisibilityAsync,
 } from "expo-navigation-bar";
 import { SplashScreen, Stack } from "expo-router";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { Platform, useColorScheme } from "react-native";
 
 import Colors from "../constants/Colors";
+import type { DeviceInfo } from "../constants/Types";
+import { AppContext } from "../constants/Constants";
+import { getDevicesFromStorage } from "../helpers/functions";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -68,59 +71,77 @@ function RootLayoutNav() {
     fixAndroidNavbar();
   });
   const colorScheme = useColorScheme();
+  const [devices, setDevices] = useState<DeviceInfo[]>([]);
+  const [isSetupComplete, setIsSetupComplete] = useState(false);
+
+  async function getDevices() {
+    const d = await getDevicesFromStorage();
+    setDevices(d);
+  }
+
+  useLayoutEffect(() => {
+    getDevices();
+  }, []);
 
   return (
     <>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <Stack screenOptions={{ headerShown: false }}>
-          {/* <Stack.Screen name="(main)" /> */}
-          <Stack.Screen
-            name="(setup)"
-            options={{
-              headerShown: true,
-              title: "Setup",
-              headerStyle: { backgroundColor: Colors.light.primary2 },
-              headerTintColor: "#fff",
-            }}
-          />
-          <Stack.Screen
-            name="(notifications)"
-            options={{
-              headerShown: true,
-              title: "Notifications",
-              headerStyle: { backgroundColor: Colors.light.primary2 },
-              headerTintColor: "#fff",
-            }}
-          />
-          <Stack.Screen
-            name="(settings)"
-            options={{
-              headerShown: true,
-              title: "Settings",
-              headerStyle: { backgroundColor: Colors.light.primary2 },
-              headerTintColor: "#fff",
-            }}
-          />
-          <Stack.Screen
-            name="(config)"
-            options={{
-              headerShown: true,
-              title: "Config",
-              headerStyle: { backgroundColor: Colors.light.primary2 },
-              headerTintColor: "#fff",
-            }}
-          />
-          <Stack.Screen
-            name="(colors)"
-            options={{
-              headerShown: true,
-              title: "Colors",
-              headerStyle: { backgroundColor: Colors.light.primary2 },
-              headerTintColor: "#fff",
-            }}
-          />
-          <Stack.Screen name="modal" />
-        </Stack>
+        <AppContext.Provider
+          value={{
+            devices,
+            setDevices,
+          }}
+        >
+          <Stack screenOptions={{ headerShown: false }}>
+            {/* <Stack.Screen name="(main)" /> */}
+            <Stack.Screen
+              name="(setup)"
+              options={{
+                headerShown: true,
+                title: "Setup",
+                headerStyle: { backgroundColor: Colors.light.primary2 },
+                headerTintColor: "#fff",
+              }}
+            />
+            <Stack.Screen
+              name="(notifications)"
+              options={{
+                headerShown: true,
+                title: "Notifications",
+                headerStyle: { backgroundColor: Colors.light.primary2 },
+                headerTintColor: "#fff",
+              }}
+            />
+            <Stack.Screen
+              name="(settings)"
+              options={{
+                headerShown: true,
+                title: "Settings",
+                headerStyle: { backgroundColor: Colors.light.primary2 },
+                headerTintColor: "#fff",
+              }}
+            />
+            <Stack.Screen
+              name="(config)"
+              options={{
+                headerShown: true,
+                title: "Config",
+                headerStyle: { backgroundColor: Colors.light.primary2 },
+                headerTintColor: "#fff",
+              }}
+            />
+            <Stack.Screen
+              name="(colors)"
+              options={{
+                headerShown: true,
+                title: "Colors",
+                headerStyle: { backgroundColor: Colors.light.primary2 },
+                headerTintColor: "#fff",
+              }}
+            />
+            <Stack.Screen name="modal" />
+          </Stack>
+        </AppContext.Provider>
       </ThemeProvider>
     </>
   );

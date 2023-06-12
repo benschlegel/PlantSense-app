@@ -19,3 +19,8 @@ export type DeviceInfo = {
   host: string;
   deviceName: string;
 };
+
+export type AppContextType = {
+  devices: DeviceInfo[];
+  setDevices: React.Dispatch<React.SetStateAction<DeviceInfo[]>>;
+};

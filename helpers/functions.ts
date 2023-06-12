@@ -150,8 +150,8 @@ export async function getDevicesFromStorage(): Promise<DeviceInfo[]> {
     return jsonValue != null ? JSON.parse(jsonValue) : [];
   } catch (e) {
     console.error("Error while reading from storage: ", e);
+    return [];
   }
-  return [];
 }
 
 /**
@@ -182,5 +182,25 @@ export async function saveDevicesToStorage(devices: DeviceInfo[]) {
     await AsyncStorage.setItem("devices", jsonValue);
   } catch (e) {
     console.error("Error while writing to storage: ", e);
+  }
+}
+
+export async function getSetupStateFromStorage(): Promise<boolean> {
+  try {
+    const jsonValue = await AsyncStorage.getItem("setup");
+    return jsonValue != null ? JSON.parse(jsonValue) : false;
+  } catch (e) {
+    console.error("Error while reading from storage: ", e);
+    return false;
+  }
+}
+
+export async function saveSetupStateToStorage(isComplete: boolean) {
+  try {
+    const jsonValue = JSON.stringify(isComplete);
+    await AsyncStorage.setItem("setup", jsonValue);
+  } catch (e) {
+    console.error("Error while reading from storage: ", e);
+    return false;
   }
 }

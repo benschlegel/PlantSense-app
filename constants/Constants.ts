@@ -1,3 +1,7 @@
+import { createContext } from "react";
+
+import type { AppContextType } from "./Types";
+
 // Notification text for "NotificationStatus" enum (used to convert status code to text)
 export const NotificationText = [
   "Your plant requires water. Please water the plant.",
@@ -7,3 +11,8 @@ export const NotificationText = [
   "Your plant needs more fertilizer. Please add more.",
   "Your plant has too much fertilizer. Please inspect the soil.",
 ];
+
+export const AppContext = createContext<AppContextType>({
+  setup: { isSetupComplete: false, setIsSetupComplete: () => {} },
+  devices: { devices: [], setDevices: () => {} },
+});
