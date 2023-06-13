@@ -93,7 +93,8 @@ function RootLayoutNav() {
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <AppContext.Provider value={[devices, setDevices]}>
           <Stack screenOptions={{ headerShown: false }}>
-            {/* <Stack.Screen name="(main)" /> */}
+            <Stack.Screen name="(main)" />
+            <Stack.Screen name="(networks)" />
             <Stack.Screen
               name="(setup)"
               options={{
@@ -139,7 +140,7 @@ function RootLayoutNav() {
                 headerTintColor: "#fff",
               }}
             />
-            <Stack.Screen name="modal" />
+            <Stack.Screen name="modal" options={{ presentation: "modal" }} />
           </Stack>
         </AppContext.Provider>
       </ThemeProvider>
