@@ -18,7 +18,11 @@ import { Platform, useColorScheme } from "react-native";
 import Colors from "../constants/Colors";
 import type { DeviceInfo } from "../constants/Types";
 import { AppContext } from "../constants/Constants";
-import { getDevicesFromStorage } from "../helpers/functions";
+import {
+  addDeviceToStorage,
+  getDevicesFromStorage,
+  saveDevicesToStorage,
+} from "../helpers/functions";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -72,26 +76,22 @@ function RootLayoutNav() {
   });
   const colorScheme = useColorScheme();
   const [devices, setDevices] = useState<DeviceInfo[]>([]);
-  const [isSetupComplete, setIsSetupComplete] = useState(false);
 
-  async function getDevices() {
-    const d = await getDevicesFromStorage();
-    setDevices(d);
-  }
-
+  //Add devices from storage to global context
   useLayoutEffect(() => {
-    getDevices();
+    getDevicesFromStorage().then((res) => {
+      setDevices(res);
+    });
   }, []);
+
+  useEffect(() => {
+    saveDevicesToStorage(devices);
+  }, [devices]);
 
   return (
     <>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <AppContext.Provider
-          value={{
-            devices,
-            setDevices,
-          }}
-        >
+        <AppContext.Provider value={[devices, setDevices]}>
           <Stack screenOptions={{ headerShown: false }}>
             {/* <Stack.Screen name="(main)" /> */}
             <Stack.Screen

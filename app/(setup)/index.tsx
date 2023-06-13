@@ -1,10 +1,16 @@
 import { StyleSheet, Text, View } from "react-native";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import Colors from "../../constants/Colors";
 import StyledButton from "../../components/StyledButton";
-import { getDeviceAvailable } from "../../helpers/functions";
+import {
+  getDeviceAvailable,
+  getDevicesFromStorage,
+} from "../../helpers/functions";
+import { AppContext } from "../../constants/Constants";
+import type { DeviceInfo } from "../../constants/Types";
 
 // How many times to attempt connection to esp for
 const connectionAttemps = 5;
@@ -17,21 +23,23 @@ export default function Setup() {
   >(undefined);
 
   const [isScanActive, setIsScanActive] = useState(false);
+  const [devices, setDevices] = useContext(AppContext);
 
   useEffect(() => {
-    //
-  }, []);
+    console.log("Devices: ", devices);
+  }, [devices]);
   async function checkAvailable() {
     setIsScanActive(true);
     // Artifical delay for demo, remove
     setTimeout(() => {
       //
     }, 600);
-    let isAvailable = false;
+    let deviceInfo: DeviceInfo | null = null;
     for (let i = 0; i < connectionAttemps; i++) {
       // Override isAvailable: true, if successful (and break)
-      isAvailable = await getDeviceAvailable();
-      if (isAvailable) {
+      deviceInfo = await getDeviceAvailable();
+      if (deviceInfo) {
+        setDevices([...devices, deviceInfo]);
         break;
       }
     }
@@ -39,7 +47,7 @@ export default function Setup() {
     setIsScanActive(false);
 
     // set to isAvailable (true, if got response and false by default)
-    setIsDeviceAvailable(isAvailable);
+    setIsDeviceAvailable(!!deviceInfo);
   }
   return (
     <View style={styles.container}>
@@ -83,14 +91,20 @@ export default function Setup() {
           click here
         </Text>
       </View>
+      <View>
+        {devices.map((device) => (
+          <Text key={device.host}>{device.deviceName}</Text>
+        ))}
+      </View>
       <View style={styles.buttonContainer}>
-        <Link href="/(main)" asChild>
-          <StyledButton
-            title="Skip"
-            buttonStyle={[styles.secondaryButton]}
-            containerStyle={{ width: 200, alignItems: "flex-start" }}
-          />
-        </Link>
+        {/* <Link href="/(main)" asChild> */}
+        <StyledButton
+          title="Skip"
+          buttonStyle={[styles.secondaryButton]}
+          containerStyle={{ width: 200, alignItems: "flex-start" }}
+          onPress={async () => console.log(await getDevicesFromStorage())}
+        />
+        {/* </Link> */}
         <Link href="/(config)" asChild>
           <StyledButton
             title="Next"

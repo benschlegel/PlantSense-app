@@ -33,21 +33,22 @@ export async function deleteNotification(deviceName: string, index: number) {
  * Waits 4 seconds for response
  * @returns true, if device is reached/available, false, if connection was aborted
  */
-export function getDeviceAvailable(): Promise<boolean> {
+export function getDeviceAvailable(): Promise<null | DeviceInfo> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 4000);
 
-  const resultPromise = new Promise<boolean>((resolve, reject) => {
-    fetch(setupServerUrl + "/heartbeat", {
+  const resultPromise = new Promise<null | DeviceInfo>((resolve, reject) => {
+    //
+    typedFetch<DeviceInfo>(setupServerUrl + "/deviceInfo", {
       signal: controller.signal,
     })
-      .then(() => {
-        resolve(true);
+      .then((res) => {
+        resolve(res);
         clearTimeout(timeoutId);
       })
       .catch((err) => {
         console.error("Error while getting device: ", err);
-        resolve(false);
+        resolve(null);
       });
   });
 
@@ -155,16 +156,39 @@ export async function getDevicesFromStorage(): Promise<DeviceInfo[]> {
 }
 
 /**
- * Add new device to storage without overriding old ones.
+ * Deletes all devices from local storage.
+ * @returns true, if successful, false if not
+ */
+export async function clearDevicesFromStorage(): Promise<boolean> {
+  try {
+    await AsyncStorage.removeItem("devices");
+    return true;
+  } catch (e) {
+    console.error("Error while clearing devices: ", e);
+    return false;
+  }
+}
+
+/**
+ * Add new device to storage.
  * If no devices are stored yet, creates a new array and pushes entry.
- * @param device new device to add to storage
+ * @param device new device to add to storage. If device.host matches an existing entry, it will be overridden.
+ * Otherwise, it will be appended.
  */
 export async function addDeviceToStorage(device: DeviceInfo) {
   try {
     // Get old items from storage, push new entry and save item to storage
     AsyncStorage.getItem("devices").then((devices) => {
-      const d = devices ? JSON.parse(devices) : [];
-      d.push(device);
+      const d: DeviceInfo[] = devices ? JSON.parse(devices) : [];
+      const found = d.find((item) => item.host === device.host);
+
+      if (found) {
+        // If element with matching host was found, replace entry
+        d[d.indexOf(found)] = device;
+      } else {
+        // Otherwise, push new entry
+        d.push(device);
+      }
       AsyncStorage.setItem("devices", JSON.stringify(d));
     });
   } catch (e) {
@@ -195,12 +219,43 @@ export async function getSetupStateFromStorage(): Promise<boolean> {
   }
 }
 
+/**
+ * Saves setup state to local storage
+ * @param isComplete new state for setup complete (true -> setup is complete, false -> setup is not complete)
+ */
 export async function saveSetupStateToStorage(isComplete: boolean) {
   try {
     const jsonValue = JSON.stringify(isComplete);
     await AsyncStorage.setItem("setup", jsonValue);
   } catch (e) {
     console.error("Error while reading from storage: ", e);
-    return false;
   }
+}
+
+/**
+ * Returns typed fetch result (parsed to json)
+ * @param input input of fetch
+ * @param init init of fetch
+ * @returns typed result
+ */
+export function typedFetch<E>(
+  input: RequestInfo | URL,
+  init?: RequestInit | undefined
+) {
+  return new Promise<E>((resolve, reject) => {
+    fetch(input, init)
+      .then((res) => {
+        res
+          .json()
+          .then((resp: E) => {
+            resolve(resp);
+          })
+          .catch((err) => {
+            reject(err);
+          });
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
 }

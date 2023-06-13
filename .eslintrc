@@ -2,6 +2,7 @@
   "extends": "react-native-wcandillon",
   "rules": {
     "@typescript-eslint/no-non-null-assertion": 0,
-    "import/no-default-export": 0
+    "import/no-default-export": 0,
+    "no-empty-function": 0
   }
 }

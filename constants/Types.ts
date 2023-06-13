@@ -1,3 +1,5 @@
+import type { Dispatch, SetStateAction } from "react";
+
 export type NotificationResponse = number[];
 export type NotificationType = {
   name: string;
@@ -20,7 +22,6 @@ export type DeviceInfo = {
   deviceName: string;
 };
 
-export type AppContextType = {
-  devices: DeviceInfo[];
-  setDevices: React.Dispatch<React.SetStateAction<DeviceInfo[]>>;
-};
+export type DeviceInfoSetter = Dispatch<SetStateAction<DeviceInfo[]>>;
+
+export type AppContextType = [DeviceInfo[], DeviceInfoSetter];
