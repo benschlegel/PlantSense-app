@@ -4,6 +4,8 @@ import { Link } from "expo-router";
 
 import Colors from "../constants/Colors";
 
+import StyledIcon from "./StyledIcon";
+
 type WifiEntryProps = {
   name: string;
   isEncrypted: boolean;
@@ -43,10 +45,22 @@ export default function WifiEntry({ name, isEncrypted }: WifiEntryProps) {
         // onPress={() => twoOptionAlertHandler(name)}
       >
         <View style={styles.wifiContainer}>
-          <Text style={[styles.deviceText, { fontWeight: "bold" }]}>
-            {name}
-          </Text>
-          {isEncrypted && <Text>E</Text>}
+          <View style={styles.nameContainer}>
+            <StyledIcon
+              name="wifi"
+              iconSize={17}
+              color={Colors.light.dark}
+              style={{ marginRight: 8 }}
+            />
+            <Text style={[styles.deviceText, { fontWeight: "bold" }]}>
+              {name}
+            </Text>
+          </View>
+          <StyledIcon
+            name={isEncrypted ? "lock" : "unlock"}
+            iconSize={18}
+            color={Colors.light.dark}
+          />
         </View>
       </TouchableOpacity>
     </Link>
@@ -69,5 +83,10 @@ const styles = StyleSheet.create({
   },
   deviceText: {
     color: Colors.light.dark,
+  },
+  nameContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

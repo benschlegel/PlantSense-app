@@ -1,28 +1,29 @@
-import { ScrollView, StyleSheet, Text, View, Alert } from "react-native";
-import React, { useEffect, useState } from "react";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
+import React, { memo, useEffect, useState } from "react";
 import { Link } from "expo-router";
 
 import Colors from "../../constants/Colors";
 import StyledButton from "../../components/StyledButton";
 import type { WifiInfo } from "../../constants/Types";
 import WifiEntry from "../../components/WifiEntry";
-import { typedFetch } from "../../helpers/functions";
+import { removeDuplicateNetworks, typedFetch } from "../../helpers/functions";
 import { setupServerUrl } from "../../constants/Config";
 
-function removeDuplicateNetworks(networks: WifiInfo[]) {
-  return networks.filter(
-    (v, i, a) => a.findIndex((v2) => v2.ssid === v.ssid) === i
-  );
-}
-
-export default function Networks() {
+function Networks() {
   const isDeviceAvailable = true;
   const deviceFoundText = "Test1";
   const defaultText =
     "To get started, please select your home wifi and enter the password.";
   const [isScanActive, setIsScanActive] = useState(false);
   const [networks, setNetworks] = useState<WifiInfo[]>([
-    { ssid: "test", isEncrypted: true },
+    { ssid: "Default wifi", isEncrypted: false },
   ]);
 
   async function getNetworks() {
@@ -32,6 +33,9 @@ export default function Networks() {
       setIsScanActive(false);
       setNetworks(newArr);
     });
+    setIsScanActive(true);
+    // networks.push({ ssid: "newNet", isEncrypted: true });
+    // setNetworks([...networks]);
   }
 
   // useEffect(() => {
@@ -61,6 +65,7 @@ export default function Networks() {
             <View style={styles.deviceContainer}>
               <View style={styles.plantContainer}>
                 <Text style={styles.deviceText}>Scanning...</Text>
+                <ActivityIndicator />
               </View>
             </View>
           )}
@@ -74,7 +79,7 @@ export default function Networks() {
             marginBottom: 22,
             backgroundColor: Colors.light.background,
           }}
-          // disabled={isScanActive}
+          disabled={isScanActive}
           onPress={() => getNetworks()}
         />
         {/* </Link> */}
@@ -83,6 +88,8 @@ export default function Networks() {
     </View>
   );
 }
+
+export default memo(Networks);
 
 const styles = StyleSheet.create({
   container: {
@@ -123,8 +130,11 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.light.light,
     height: 46,
     borderRadius: 10,
-    justifyContent: "center",
+    justifyContent: "space-between",
+    flexDirection: "row",
     alignItems: "center",
+    paddingLeft: 22,
+    paddingRight: 16,
   },
   placeholder: {
     marginTop: 40,

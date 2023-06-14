@@ -6,7 +6,11 @@ import {
   setupServerUrl,
 } from "../constants/Config";
 import { NotificationText } from "../constants/Constants";
-import type { DeviceInfo, NotificationStatus } from "../constants/Types";
+import type {
+  DeviceInfo,
+  NotificationStatus,
+  WifiInfo,
+} from "../constants/Types";
 
 const deleteNotificationEndpoint = "/clearNotification";
 export async function deleteNotification(deviceName: string, index: number) {
@@ -258,4 +262,15 @@ export function typedFetch<E>(
         reject(err);
       });
   });
+}
+
+/**
+ * Removes duplicates from array of networks (filtered by ssid).
+ * @param networks array of networks to dedupe
+ * @returns networks without duplicates.
+ */
+export function removeDuplicateNetworks(networks: WifiInfo[]) {
+  return networks.filter(
+    (v, i, a) => a.findIndex((v2) => v2.ssid === v.ssid) === i
+  );
 }
