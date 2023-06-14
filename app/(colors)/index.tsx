@@ -6,6 +6,7 @@ import Colors from "../../constants/Colors";
 import Hr from "../../components/Hr";
 import StyledButton from "../../components/StyledButton";
 import { sendLedRequest } from "../../helpers/functions";
+import StyledInput from "../../components/StyledInput";
 
 export default function ColorsScreen() {
   const [red, setRed] = useState<string>("");
@@ -46,40 +47,26 @@ export default function ColorsScreen() {
             disabled={false}
           />
           <Hr />
-          <View style={styles.inputContainer}>
-            <Text style={styles.subheaderText}>Red</Text>
-            <TextInput
-              style={styles.inputStyle}
-              placeholder="0-255"
-              placeholderTextColor={Colors.light.background}
-              value={red}
-              onChangeText={setRed}
-              // keyboardType={"numeric"}
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.subheaderText}>Green</Text>
-            <TextInput
-              style={styles.inputStyle}
-              placeholder="0-255"
-              selectionColor={Colors.light.background}
-              placeholderTextColor={Colors.light.background}
-              value={green}
-              // keyboardType={"numeric"}
-              onChangeText={setGreen}
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.subheaderText}>Blue</Text>
-            <TextInput
-              style={styles.inputStyle}
-              placeholder="0-255"
-              placeholderTextColor={Colors.light.background}
-              value={blue}
-              // keyboardType={"numeric"}
-              onChangeText={setBlue}
-            />
-          </View>
+          <StyledInput
+            header="Red"
+            placeholder="0-255"
+            value={red}
+            onChange={setRed}
+          />
+          <StyledInput
+            header="Green"
+            placeholder="0-255"
+            value={green}
+            onChange={setGreen}
+            hidePassword={true}
+          />
+          <StyledInput
+            header="Blue"
+            placeholder="0-255"
+            value={blue}
+            onChange={setBlue}
+            hidePassword={true}
+          />
           {/* <Text>{"SSID: " + ssidInput}</Text> */}
         </ScrollView>
       </View>
