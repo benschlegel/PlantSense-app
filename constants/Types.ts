@@ -7,6 +7,10 @@ export type NotificationType = {
 };
 export type DevicesResponse = string[];
 
+export type CredentialsResponse = {
+  isValid: boolean;
+};
+
 export enum NotificationStatus {
   LOW_WATER,
   HIGH_WATER,

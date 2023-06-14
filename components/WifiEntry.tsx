@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 
 import Colors from "../constants/Colors";
@@ -7,14 +7,38 @@ type WifiEntryProps = {
   name: string;
   isEncrypted: boolean;
 };
+
+const twoOptionAlertHandler = (ssid: string) => {
+  //function to make two option alert
+  Alert.prompt(
+    "Enter password",
+    "Please enter the password for wifi network '" + ssid + "'.",
+    [
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      {
+        text: "OK",
+        onPress: (password) => console.log("OK Pressed, password: " + password),
+      },
+    ],
+    "secure-text"
+  );
+};
+
 export default function WifiEntry({ name, isEncrypted }: WifiEntryProps) {
   return (
-    <View style={styles.deviceContainer}>
+    <TouchableOpacity
+      style={styles.deviceContainer}
+      onPress={() => twoOptionAlertHandler(name)}
+    >
       <View style={styles.wifiContainer}>
         <Text style={[styles.deviceText, { fontWeight: "bold" }]}>{name}</Text>
         {isEncrypted && <Text>E</Text>}
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 

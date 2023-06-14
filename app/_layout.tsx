@@ -149,6 +149,15 @@ function RootLayoutNav() {
               }}
             />
             <Stack.Screen
+              name="(password)"
+              options={{
+                headerShown: true,
+                title: "Password",
+                headerStyle: { backgroundColor: Colors.light.primary2 },
+                headerTintColor: "#fff",
+              }}
+            />
+            <Stack.Screen
               name="modal"
               options={{ presentation: "transparentModal" }}
             />

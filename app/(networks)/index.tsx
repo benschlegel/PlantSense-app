@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Link } from "expo-router";
 
@@ -21,7 +21,9 @@ export default function Networks() {
   const defaultText =
     "To get started, please select your home wifi and enter the password.";
   const [isScanActive, setIsScanActive] = useState(false);
-  const [networks, setNetworks] = useState<WifiInfo[]>([]);
+  const [networks, setNetworks] = useState<WifiInfo[]>([
+    { ssid: "test", isEncrypted: true },
+  ]);
 
   async function getNetworks() {
     setIsScanActive(true);
