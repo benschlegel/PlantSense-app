@@ -14,6 +14,7 @@ import {
 import { SplashScreen, Stack, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { Platform, useColorScheme } from "react-native";
+import { StatusBar } from "expo-status-bar";
 
 import Colors from "../constants/Colors";
 import type { DeviceInfo } from "../constants/Types";
@@ -164,6 +165,7 @@ function RootLayoutNav() {
               options={{ presentation: "transparentModal" }}
             />
           </Stack>
+          <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
         </AppContext.Provider>
       </ThemeProvider>
     </>

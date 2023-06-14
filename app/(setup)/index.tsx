@@ -115,11 +115,10 @@ export default function Setup() {
             // onPress={async () => await AsyncStorage.clear()}
           />
         </Link>
-        <Link href="/(config)" asChild>
+        <Link href="/(networks)" asChild>
           <StyledButton
             title="Next"
             buttonStyle={[styles.buttonStyleDark, { marginRight: 40 }]}
-            disabled={!isDeviceAvailable}
             containerStyle={{ width: 200, marginRight: 20 }}
           />
         </Link>

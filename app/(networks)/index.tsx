@@ -79,6 +79,7 @@ export default function Networks() {
         />
         {/* </Link> */}
       </View>
+      <View style={styles.placeholder} />
     </View>
   );
 }
@@ -124,6 +125,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
+  },
+  placeholder: {
+    marginTop: 40,
   },
   networkContainer: {
     flex: 1,
