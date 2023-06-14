@@ -14,6 +14,7 @@ import Colors from "../../constants/Colors";
 import HappyPlanty from "../../assets/lottie/Planty_happy_led.json";
 import SadPlanty from "../../assets/lottie/Planty_sad_led.json";
 import HappyPlantyDefault from "../../assets/lottie/Planty_new.json";
+import StyledIcon from "../../components/StyledIcon";
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>["name"];
@@ -33,7 +34,7 @@ export default function MainScreen() {
             <Link href={"/(settings)"} asChild>
               <Pressable>
                 {({ pressed }) => (
-                  <TabBarIcon
+                  <StyledIcon
                     name="gear"
                     iconSize={34}
                     color={Colors.light.dark}
@@ -44,7 +45,7 @@ export default function MainScreen() {
             <Link href={"/(notifications)"} asChild>
               <Pressable>
                 {({ pressed }) => (
-                  <TabBarIcon
+                  <StyledIcon
                     name="bell"
                     iconSize={28}
                     color={Colors.light.dark}
