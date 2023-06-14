@@ -58,14 +58,12 @@ export default function ColorsScreen() {
             placeholder="0-255"
             value={green}
             onChange={setGreen}
-            hidePassword={true}
           />
           <StyledInput
             header="Blue"
             placeholder="0-255"
             value={blue}
             onChange={setBlue}
-            hidePassword={true}
           />
           {/* <Text>{"SSID: " + ssidInput}</Text> */}
         </ScrollView>
@@ -105,27 +103,9 @@ const styles = StyleSheet.create({
     gap: 24,
     paddingBottom: 20,
   },
-  inputContainer: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 10,
-  },
-  inputStyle: {
-    width: "100%",
-    height: 46,
-    paddingLeft: 16,
-    backgroundColor: Colors.light.primary2,
-    color: Colors.light.light,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: Colors.light.dark,
-  },
   subheaderText: {
     color: Colors.light.dark,
     fontSize: 16,
-  },
-  confirmConfigContainer: {
-    marginTop: 20,
   },
   nextContainer: {
     marginBottom: 30,
@@ -136,13 +116,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.light.dark,
     alignSelf: "flex-end",
     width: "100%",
-  },
-  successContainer: {
-    marginTop: 30,
-  },
-  successText: {
-    fontSize: 17,
-    color: "green",
   },
   purple: {
     backgroundColor: "#9336B4",
