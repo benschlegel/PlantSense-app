@@ -9,7 +9,6 @@ import React, { useEffect } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { Link } from "expo-router";
 
-import EditScreenInfo from "../../components/EditScreenInfo";
 import { Text, View } from "../../components/Themed";
 import Colors from "../../constants/Colors";
 import HappyPlanty from "../../assets/lottie/Planty_happy_led.json";
@@ -22,13 +21,6 @@ function TabBarIcon(props: {
   iconSize: number;
 }) {
   return <FontAwesome size={props.iconSize} {...props} />;
-}
-
-async function testDNS() {
-  await fetch("http://PlantSense.local").then((res) => {
-    const { status } = res;
-    console.log("Received status code: ", status);
-  });
 }
 
 export default function MainScreen() {
@@ -80,15 +72,11 @@ export default function MainScreen() {
         />
 
         <View style={styles.green}>
-          {/* <Link href="/(colors)" asChild> */}
-          <TouchableOpacity
-            // href={"/notifications"}
-            style={styles.buttonColorContainer}
-            onPress={() => testDNS()}
-          >
-            <Text>Change Colors</Text>
-          </TouchableOpacity>
-          {/* </Link> */}
+          <Link href="/(colors)" asChild>
+            <TouchableOpacity style={styles.buttonColorContainer}>
+              <Text>Change Colors</Text>
+            </TouchableOpacity>
+          </Link>
         </View>
       </View>
     </>

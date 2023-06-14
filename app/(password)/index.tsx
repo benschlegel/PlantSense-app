@@ -1,9 +1,12 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
+import { useLocalSearchParams } from "expo-router";
 
 import Colors from "../../constants/Colors";
 
-export default function index() {
+export default function PasswordScreen() {
+  const params = useLocalSearchParams();
+  console.log("Params: ", params.name);
   return (
     <View style={styles.container}>
       <Text>index</Text>

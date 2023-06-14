@@ -11,7 +11,7 @@ import {
   setPositionAsync,
   setVisibilityAsync,
 } from "expo-navigation-bar";
-import { SplashScreen, Stack } from "expo-router";
+import { SplashScreen, Stack, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { Platform, useColorScheme } from "react-native";
 
@@ -87,6 +87,8 @@ function RootLayoutNav() {
   useEffect(() => {
     saveDevicesToStorage(devices);
   }, [devices]);
+
+  // const params = useLocalSearchParams();
 
   return (
     <>

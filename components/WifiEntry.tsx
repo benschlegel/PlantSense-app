@@ -1,5 +1,6 @@
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
+import { Link } from "expo-router";
 
 import Colors from "../constants/Colors";
 
@@ -30,15 +31,19 @@ const twoOptionAlertHandler = (ssid: string) => {
 
 export default function WifiEntry({ name, isEncrypted }: WifiEntryProps) {
   return (
-    <TouchableOpacity
-      style={styles.deviceContainer}
-      onPress={() => twoOptionAlertHandler(name)}
-    >
-      <View style={styles.wifiContainer}>
-        <Text style={[styles.deviceText, { fontWeight: "bold" }]}>{name}</Text>
-        {isEncrypted && <Text>E</Text>}
-      </View>
-    </TouchableOpacity>
+    <Link href={{ pathname: "/(password)", params: { name: name } }} asChild>
+      <TouchableOpacity
+        style={styles.deviceContainer}
+        // onPress={() => twoOptionAlertHandler(name)}
+      >
+        <View style={styles.wifiContainer}>
+          <Text style={[styles.deviceText, { fontWeight: "bold" }]}>
+            {name}
+          </Text>
+          {isEncrypted && <Text>E</Text>}
+        </View>
+      </TouchableOpacity>
+    </Link>
   );
 }
 
