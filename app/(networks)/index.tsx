@@ -73,11 +73,12 @@ function Networks() {
         {/* <Link href="/modal" asChild> */}
         <StyledButton
           title="Scan for networks"
-          textStyle={{ color: "#000", opacity: 0.9, fontSize: 15.5 }}
+          textStyle={{ color: "#000", opacity: 0.7, fontSize: 15.5 }}
           buttonStyle={{
             width: "87%",
             marginBottom: 22,
             backgroundColor: Colors.light.background,
+            borderWidth: 0,
           }}
           disabled={isScanActive}
           onPress={() => getNetworks()}

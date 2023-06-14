@@ -11,8 +11,11 @@ import type { CredentialsResponse, Credentials } from "../../constants/Types";
 import { typedFetch } from "../../helpers/functions";
 import { setupServerUrl } from "../../constants/Config";
 
+import WifiCard from "./WifiCard";
+
 export default function PasswordScreen() {
   const { name, isEncrypted } = useLocalSearchParams();
+  const encrypted = isEncrypted === "true";
   console.log("IsEncrypted: ", isEncrypted);
   const [password, setPassword] = useState("");
   const [isConnecting, setIsConnecting] = useState(false);
@@ -32,64 +35,22 @@ export default function PasswordScreen() {
     // });
     setTimeout(() => {
       setIsConnecting(false);
-      setIsValid(false);
+      setIsValid(true);
     }, 2000);
   }
   return (
     <View style={styles.container}>
-      <View style={styles.notificationContainer}>
-        <View style={styles.notificationTopRow}>
-          <View style={styles.deviceInfoContainer}>
-            <View style={styles.nameContainer}>
-              <StyledIcon
-                name="wifi"
-                iconSize={22}
-                style={styles.wifiIcon}
-                color={Colors.light.light}
-              />
-              <Text style={styles.deviceNameText}>{name}</Text>
-            </View>
-            <StyledIcon
-              name={isEncrypted ? "lock" : "unlock"}
-              iconSize={20}
-              color={Colors.light.light}
-              style={{ marginTop: 2 }}
-            />
-          </View>
-        </View>
-        <Hr height={2} style={styles.hr} />
-        <View style={styles.mainContainer}>
-          <StyledInput
-            containerStyle={{ height: 70 }}
-            placeholder="wifi password..."
-            header="Password"
-            isPasswordField={true}
-            headerStyle={{ fontSize: 17 }}
-            autofocus={true}
-            value={password}
-            onChange={setPassword}
-            outlineColor={Colors.light.light}
-          />
-        </View>
-      </View>
-      {isValid === false && (
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>
-            Password incorrect. Please try again.
-          </Text>
-        </View>
-      )}
-      <View style={styles.buttonContainer}>
-        <StyledButton
-          title="Connect"
-          containerStyle={{ width: "100%" }}
-          buttonStyle={{ borderWidth: 0, width: "70%" }}
-          disabled={isConnecting}
-          isLoading={isConnecting}
-          disabledOpacity={0.7}
-          onPress={() => connectWithWifi()}
+      {(isValid === undefined || isValid === false) && (
+        <WifiCard
+          name={name as string}
+          connectWithWifi={connectWithWifi}
+          isConnecting={isConnecting}
+          isEncrypted={encrypted}
+          isValid={isValid}
+          password={password}
+          setPassword={setPassword}
         />
-      </View>
+      )}
       {/* <View style={{ flex: 8 }} /> */}
     </View>
   );
@@ -101,65 +62,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 28,
     paddingVertical: 28,
     backgroundColor: Colors.light.background,
-  },
-  errorContainer: {
-    marginTop: 6,
-    marginLeft: 10,
-  },
-  errorText: {
-    color: "red",
-    opacity: 0.7,
-  },
-  notificationContainer: {
-    display: "flex",
-    flexDirection: "column",
-    // alignItems: "center",
-    // justifyContent: "flex-start",
-    // flex: 1,
-    backgroundColor: Colors.light.primary2,
-    // width: "87%",
-    // height: 30,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    borderRadius: 12,
-  },
-  buttonContainer: {
-    marginTop: 28,
-  },
-  mainContainer: {
-    marginVertical: 18,
-  },
-  notificationTopRow: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "flex-start",
-    justifyContent: "space-between",
-    width: "100%",
-    backgroundColor: "transparent",
-  },
-  deviceInfoContainer: {
-    display: "flex",
-    flexDirection: "row",
-    // backgroundColor: "transparent",
-    justifyContent: "space-between",
-    alignItems: "center",
-
-    flex: 1,
-  },
-  deviceNameText: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: Colors.light.text,
-  },
-  hr: {
-    marginVertical: 4,
-  },
-  wifiIcon: { marginRight: 10 },
-  nameContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    alignSelf: "center",
-    // backgroundColor: "red",
   },
 });
