@@ -31,7 +31,13 @@ const twoOptionAlertHandler = (ssid: string) => {
 
 export default function WifiEntry({ name, isEncrypted }: WifiEntryProps) {
   return (
-    <Link href={{ pathname: "/(password)", params: { name: name } }} asChild>
+    <Link
+      href={{
+        pathname: "/(password)",
+        params: { name: name, isEncrypted: isEncrypted },
+      }}
+      asChild
+    >
       <TouchableOpacity
         style={styles.deviceContainer}
         // onPress={() => twoOptionAlertHandler(name)}

@@ -1,3 +1,4 @@
+import type { StyleProp, TextStyle, ViewStyle } from "react-native";
 import {
   StyleSheet,
   Text,
@@ -17,6 +18,10 @@ type InputProps = {
   onChange?: (text: string) => void;
   isPasswordField?: boolean;
   placeholder?: string;
+  containerStyle?: StyleProp<ViewStyle>;
+  autofocus?: boolean;
+  headerStyle?: StyleProp<TextStyle>;
+  outlineColor?: string;
 };
 
 export default function StyledInput({
@@ -25,12 +30,24 @@ export default function StyledInput({
   isPasswordField = false,
   header,
   placeholder,
+  containerStyle,
+  autofocus,
+  headerStyle,
+  outlineColor,
 }: InputProps) {
   const [isHidden, setIsHidden] = useState(true);
+  const outline: StyleProp<TextStyle> = {
+    color: outlineColor,
+    borderColor: outlineColor,
+  };
   return (
-    <View style={styles.inputContainer}>
-      {header && <Text style={styles.subheaderText}>{header}</Text>}
-      <View style={styles.input}>
+    <View style={[styles.inputContainer, containerStyle]}>
+      {header && (
+        <Text style={[styles.subheaderText, headerStyle, outline]}>
+          {header}
+        </Text>
+      )}
+      <View style={[styles.input, outline]}>
         <TextInput
           style={styles.inputStyle}
           placeholder={placeholder}
@@ -41,6 +58,7 @@ export default function StyledInput({
           secureTextEntry={isPasswordField && isHidden}
           // keyboardType={"numeric"}
           onChangeText={onChange}
+          autoFocus={autofocus}
         />
         {isPasswordField && (
           <TouchableOpacity onPress={() => setIsHidden(!isHidden)}>
@@ -62,6 +80,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     gap: 10,
+    // height: 80,
   },
   subheaderText: {
     color: Colors.light.dark,

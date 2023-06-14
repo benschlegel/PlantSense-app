@@ -155,7 +155,7 @@ function RootLayoutNav() {
               name="(password)"
               options={{
                 headerShown: true,
-                title: "Password",
+                title: "Credentials",
                 headerStyle: { backgroundColor: Colors.light.primary2 },
                 headerTintColor: "#fff",
               }}

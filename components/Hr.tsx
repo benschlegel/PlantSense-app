@@ -6,10 +6,12 @@ import Colors from "../constants/Colors";
 
 type HrProps = {
   style?: StyleProp<ViewStyle>;
+  height?: number;
 };
 
-export default function Hr({ style }: HrProps) {
-  return <View style={[styles.hr, style]} />;
+export default function Hr({ style, height }: HrProps) {
+  const heightStyle: StyleProp<ViewStyle> = { height: height ? height : 4 };
+  return <View style={[styles.hr, style, heightStyle]} />;
 }
 
 const styles = StyleSheet.create({
