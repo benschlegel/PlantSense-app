@@ -94,7 +94,15 @@ function RootLayoutNav() {
         <AppContext.Provider value={[devices, setDevices]}>
           <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="(main)" />
-            <Stack.Screen name="(networks)" />
+            <Stack.Screen
+              name="(networks)"
+              options={{
+                headerShown: true,
+                title: "Network",
+                headerStyle: { backgroundColor: Colors.light.primary2 },
+                headerTintColor: "#fff",
+              }}
+            />
             <Stack.Screen
               name="(setup)"
               options={{
@@ -140,7 +148,10 @@ function RootLayoutNav() {
                 headerTintColor: "#fff",
               }}
             />
-            <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+            <Stack.Screen
+              name="modal"
+              options={{ presentation: "transparentModal" }}
+            />
           </Stack>
         </AppContext.Provider>
       </ThemeProvider>

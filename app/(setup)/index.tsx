@@ -106,7 +106,7 @@ export default function Setup() {
         ))}
       </View>
       <View style={styles.buttonContainer}>
-        <Link href="/(main)" asChild>
+        <Link href="/(networks)" asChild>
           <StyledButton
             title="Skip"
             buttonStyle={[styles.secondaryButton]}
