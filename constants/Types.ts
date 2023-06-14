@@ -31,6 +31,11 @@ export type WifiInfo = {
   isEncrypted: boolean;
 };
 
+export type Credentials = {
+  ssid: string;
+  password: string;
+};
+
 export type DeviceInfoSetter = Dispatch<SetStateAction<DeviceInfo[]>>;
 
 export type AppContextType = [DeviceInfo[], DeviceInfoSetter];

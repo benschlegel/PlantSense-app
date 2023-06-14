@@ -23,7 +23,7 @@ function Networks() {
     "To get started, please select your home wifi and enter the password.";
   const [isScanActive, setIsScanActive] = useState(false);
   const [networks, setNetworks] = useState<WifiInfo[]>([
-    { ssid: "Default wifi", isEncrypted: false },
+    { ssid: "Default wifi", isEncrypted: true },
   ]);
 
   async function getNetworks() {

@@ -7,10 +7,34 @@ import Hr from "../../components/Hr";
 import StyledInput from "../../components/StyledInput";
 import StyledIcon from "../../components/StyledIcon";
 import StyledButton from "../../components/StyledButton";
+import type { CredentialsResponse, Credentials } from "../../constants/Types";
+import { typedFetch } from "../../helpers/functions";
+import { setupServerUrl } from "../../constants/Config";
 
 export default function PasswordScreen() {
   const { name, isEncrypted } = useLocalSearchParams();
+  console.log("IsEncrypted: ", isEncrypted);
   const [password, setPassword] = useState("");
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [isValid, setIsValid] = useState<boolean | undefined>();
+
+  function connectWithWifi() {
+    setIsValid(undefined);
+    setIsConnecting(true);
+    const payload: Credentials = { ssid: name as string, password: password };
+
+    // typedFetch<CredentialsResponse>(setupServerUrl + "/tryCredentials", {
+    //   method: "POST",
+    //   body: JSON.stringify(payload),
+    // }).then((res) => {
+    //   console.log("Res: ", res);
+    //   setIsValid(res.isValid);
+    // });
+    setTimeout(() => {
+      setIsConnecting(false);
+      setIsValid(false);
+    }, 2000);
+  }
   return (
     <View style={styles.container}>
       <View style={styles.notificationContainer}>
@@ -48,11 +72,22 @@ export default function PasswordScreen() {
           />
         </View>
       </View>
+      {isValid === false && (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>
+            Password incorrect. Please try again.
+          </Text>
+        </View>
+      )}
       <View style={styles.buttonContainer}>
         <StyledButton
           title="Connect"
           containerStyle={{ width: "100%" }}
           buttonStyle={{ borderWidth: 0, width: "70%" }}
+          disabled={isConnecting}
+          isLoading={isConnecting}
+          disabledOpacity={0.7}
+          onPress={() => connectWithWifi()}
         />
       </View>
       {/* <View style={{ flex: 8 }} /> */}
@@ -66,6 +101,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 28,
     paddingVertical: 28,
     backgroundColor: Colors.light.background,
+  },
+  errorContainer: {
+    marginTop: 6,
+    marginLeft: 10,
+  },
+  errorText: {
+    color: "red",
+    opacity: 0.7,
   },
   notificationContainer: {
     display: "flex",
