@@ -1,28 +1,39 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 
 import Colors from "../../constants/Colors";
 import Hr from "../../components/Hr";
 import StyledInput from "../../components/StyledInput";
 import StyledIcon from "../../components/StyledIcon";
+import StyledButton from "../../components/StyledButton";
 
 export default function PasswordScreen() {
   const { name, isEncrypted } = useLocalSearchParams();
+  const [password, setPassword] = useState("");
   return (
     <View style={styles.container}>
       <View style={styles.notificationContainer}>
         <View style={styles.notificationTopRow}>
           <View style={styles.deviceInfoContainer}>
-            <Text style={styles.deviceNameText}>{name}</Text>
+            <View style={styles.nameContainer}>
+              <StyledIcon
+                name="wifi"
+                iconSize={22}
+                style={styles.wifiIcon}
+                color={Colors.light.light}
+              />
+              <Text style={styles.deviceNameText}>{name}</Text>
+            </View>
             <StyledIcon
               name={isEncrypted ? "lock" : "unlock"}
               iconSize={20}
               color={Colors.light.light}
+              style={{ marginTop: 2 }}
             />
           </View>
         </View>
-        <Hr height={2} style={{ marginVertical: 4 }} />
+        <Hr height={2} style={styles.hr} />
         <View style={styles.mainContainer}>
           <StyledInput
             containerStyle={{ height: 70 }}
@@ -31,12 +42,18 @@ export default function PasswordScreen() {
             isPasswordField={true}
             headerStyle={{ fontSize: 17 }}
             autofocus={true}
+            value={password}
+            onChange={setPassword}
             outlineColor={Colors.light.light}
           />
         </View>
-
-        {/* <View style={{ flexDirection: "row", width: "100%", height: 80 }}>
-        </View> */}
+      </View>
+      <View style={styles.buttonContainer}>
+        <StyledButton
+          title="Connect"
+          containerStyle={{ width: "100%" }}
+          buttonStyle={{ borderWidth: 0, width: "70%" }}
+        />
       </View>
       {/* <View style={{ flex: 8 }} /> */}
     </View>
@@ -63,6 +80,9 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: 12,
   },
+  buttonContainer: {
+    marginTop: 28,
+  },
   mainContainer: {
     marginVertical: 18,
   },
@@ -77,14 +97,26 @@ const styles = StyleSheet.create({
   deviceInfoContainer: {
     display: "flex",
     flexDirection: "row",
-    backgroundColor: "transparent",
+    // backgroundColor: "transparent",
     justifyContent: "space-between",
     alignItems: "center",
+
     flex: 1,
   },
   deviceNameText: {
     fontSize: 28,
     fontWeight: "bold",
     color: Colors.light.text,
+  },
+  hr: {
+    marginVertical: 4,
+  },
+  wifiIcon: { marginRight: 10 },
+  nameContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "center",
+    // backgroundColor: "red",
   },
 });
