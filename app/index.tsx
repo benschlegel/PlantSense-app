@@ -17,7 +17,7 @@ const Index = () => {
     });
   }, []);
 
-  const href = isSetupComplete ? "/(main)" : "/(setup)";
+  const href = isSetupComplete ? "/(main)" : "/(nfc)";
   // While isSetupComplete is not evaluated, return empty view
   // Once its evaluated, return redirect to new route
   return isSetupComplete === undefined ? <View /> : <Redirect href={href} />;
