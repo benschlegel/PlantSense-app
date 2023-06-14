@@ -16,7 +16,6 @@ import WifiCard from "./WifiCard";
 export default function PasswordScreen() {
   const { name, isEncrypted } = useLocalSearchParams();
   const encrypted = isEncrypted === "true";
-  console.log("IsEncrypted: ", isEncrypted);
   const [password, setPassword] = useState("");
   const [isConnecting, setIsConnecting] = useState(false);
   const [isValid, setIsValid] = useState<boolean | undefined>();
@@ -26,21 +25,24 @@ export default function PasswordScreen() {
     setIsConnecting(true);
     const payload: Credentials = { ssid: name as string, password: password };
 
-    // typedFetch<CredentialsResponse>(setupServerUrl + "/tryCredentials", {
-    //   method: "POST",
-    //   body: JSON.stringify(payload),
-    // }).then((res) => {
-    //   console.log("Res: ", res);
-    //   setIsValid(res.isValid);
-    // });
-    setTimeout(() => {
-      setIsConnecting(false);
-      setIsValid(true);
-    }, 2000);
+    typedFetch<CredentialsResponse>(setupServerUrl + "/tryCredentials", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    })
+      .then((res) => {
+        console.log("Res: ", res);
+        setIsValid(res.isValid);
+        setIsConnecting(false);
+      })
+      .catch(() => setIsConnecting(false));
+    // setTimeout(() => {
+    //   setIsConnecting(false);
+    //   setIsValid(true);
+    // }, 2000);
   }
   return (
     <View style={styles.container}>
-      {(isValid === undefined || isValid === false) && (
+      {(isValid === undefined || isValid === false || isValid === true) && (
         <WifiCard
           name={name as string}
           connectWithWifi={connectWithWifi}

@@ -63,13 +63,18 @@ export default function WifiCard({
           />
         </View>
       </View>
-      {isValid === false && (
-        <View style={styles.errorContainer}>
+
+      <View style={styles.errorContainer}>
+        {isValid === false && (
           <Text style={styles.errorText}>
             Password incorrect. Please try again.
           </Text>
-        </View>
-      )}
+        )}
+        {isValid === true && (
+          <Text style={styles.successText}>Wifi connected!</Text>
+        )}
+      </View>
+
       <View style={styles.buttonContainer}>
         <StyledButton
           title="Connect"
@@ -104,6 +109,10 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: 28,
+  },
+  successText: {
+    color: "green",
+    opacity: 0.8,
   },
   mainContainer: {
     marginVertical: 18,
