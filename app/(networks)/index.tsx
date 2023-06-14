@@ -1,25 +1,41 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "expo-router";
 
 import Colors from "../../constants/Colors";
 import StyledButton from "../../components/StyledButton";
-import WifiEntry from "../../components/WifiEntry";
 import type { WifiInfo } from "../../constants/Types";
+import WifiEntry from "../../components/WifiEntry";
+import { typedFetch } from "../../helpers/functions";
+import { setupServerUrl } from "../../constants/Config";
+
+function removeDuplicateNetworks(networks: WifiInfo[]) {
+  return networks.filter(
+    (v, i, a) => a.findIndex((v2) => v2.ssid === v.ssid) === i
+  );
+}
 
 export default function Networks() {
   const isDeviceAvailable = true;
   const deviceFoundText = "Test1";
   const defaultText =
     "To get started, please select your home wifi and enter the password.";
-  const isScanActive = false;
-  const networks: WifiInfo[] = [
-    { ssid: "PlantSense", isEncrypted: true },
-    { ssid: "More networks", isEncrypted: false },
-    { ssid: "More networks", isEncrypted: false },
-    { ssid: "More networks", isEncrypted: false },
-    { ssid: "More networks", isEncrypted: false },
-  ];
+  const [isScanActive, setIsScanActive] = useState(false);
+  const [networks, setNetworks] = useState<WifiInfo[]>([]);
+
+  async function getNetworks() {
+    setIsScanActive(true);
+    typedFetch<WifiInfo[]>(setupServerUrl + "/networks").then((res) => {
+      const newArr = removeDuplicateNetworks(res);
+      setIsScanActive(false);
+      setNetworks(newArr);
+    });
+  }
+
+  // useEffect(() => {
+  //   removeDuplicateNetworks(networks);
+  //   setNetworks([...networks]);
+  // }, []);
   return (
     <View style={styles.container}>
       <Text style={styles.headerText}>Connect your device to wifi</Text>
@@ -56,10 +72,8 @@ export default function Networks() {
             marginBottom: 22,
             backgroundColor: Colors.light.background,
           }}
-          disabled={isScanActive}
-          onPress={() => {
-            return;
-          }}
+          // disabled={isScanActive}
+          onPress={() => getNetworks()}
         />
         {/* </Link> */}
       </View>
@@ -90,7 +104,6 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   deviceContainer: {
-    paddingVertical: 32,
     paddingHorizontal: 26,
   },
   deviceText: {
