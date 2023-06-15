@@ -77,13 +77,18 @@ export default function NfcScreen() {
             />
           </Link>
         ) : (
-          <StyledButton
-            title={defaultButtonText}
-            buttonStyle={styles.buttonStyle}
-            isLoading={isScanning}
-            disabled={isScanning}
-            onPress={() => scanForDevice()}
-          />
+          <View style={{ gap: 20 }}>
+            <StyledButton
+              title={defaultButtonText}
+              buttonStyle={styles.buttonStyle}
+              isLoading={isScanning}
+              disabled={isScanning}
+              onPress={() => scanForDevice()}
+            />
+            <Link href={"/(main)"} asChild>
+              <StyledButton title="skip" buttonStyle={styles.buttonStyle} />
+            </Link>
+          </View>
         )}
       </View>
     </View>
