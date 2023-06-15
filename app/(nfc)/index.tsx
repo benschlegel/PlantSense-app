@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import AnimatedLottieView from "lottie-react-native";
+import { Link } from "expo-router";
 
 import NfcScan from "../../assets/lottie/nfc.json";
 import Wifi from "../../assets/lottie/wifi.json";
@@ -14,14 +15,16 @@ const deviceFoundText =
   "Device has been found! Please proceed to set up your new device.";
 
 const defaultButtonText = "Connect to device";
+const deviceFoundButtonText = "Go to setup";
 export default function NfcScreen() {
-  const [deviceFound, setDeviceFound] = useState(false);
+  const [isDeviceFound, setIsDeviceFound] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
 
   async function scanForDevice() {
     setIsScanning(true);
     setTimeout(() => {
       setIsScanning(false);
+      setIsDeviceFound(true);
     }, 500);
   }
   return (
@@ -31,7 +34,7 @@ export default function NfcScreen() {
       </View>
       <View style={styles.subheaderContainer}>
         <Text style={styles.subheaderText}>
-          {deviceFound ? deviceFoundText : defaultText}
+          {isDeviceFound ? deviceFoundText : defaultText}
         </Text>
       </View>
       <AnimatedLottieView
@@ -42,17 +45,22 @@ export default function NfcScreen() {
         style={styles.lottie}
       />
       <View style={styles.buttonContainer}>
-        <StyledButton
-          title="Connect to device"
-          buttonStyle={{
-            borderWidth: 0,
-            paddingHorizontal: 16,
-            paddingVertical: 14,
-            width: "60%",
-          }}
-          isLoading={isScanning}
-          onPress={() => scanForDevice()}
-        />
+        {/* Switch button if device was found. This makes it easier to wrap new button with Link */}
+        {isDeviceFound ? (
+          <Link href={"/(networks)"} asChild>
+            <StyledButton
+              title={deviceFoundButtonText}
+              buttonStyle={styles.buttonStyle}
+            />
+          </Link>
+        ) : (
+          <StyledButton
+            title={defaultButtonText}
+            buttonStyle={styles.buttonStyle}
+            isLoading={isScanning}
+            onPress={() => scanForDevice()}
+          />
+        )}
       </View>
     </View>
   );
@@ -94,5 +102,11 @@ const styles = StyleSheet.create({
   subheaderText: {
     color: Colors.light.dark,
     fontSize: 16,
+  },
+  buttonStyle: {
+    borderWidth: 0,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    width: "60%",
   },
 });
