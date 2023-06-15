@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import AnimatedLottieView from "lottie-react-native";
 import { Link } from "expo-router";
 
@@ -8,6 +8,9 @@ import Wifi from "../../assets/lottie/wifi.json";
 import Colors from "../../constants/Colors";
 import { MonoText } from "../../components/StyledText";
 import StyledButton from "../../components/StyledButton";
+import type { DeviceInfo } from "../../constants/Types";
+import { getDeviceAvailable } from "../../helpers/functions";
+import { AppContext } from "../../constants/Constants";
 
 const defaultText =
   "Scan your PlantSense chip and connect to it's wifi to get started.";
@@ -15,14 +18,34 @@ const deviceFoundText =
   "Device has been found! Please proceed to set up your new device.";
 
 const defaultButtonText = "Connect to device";
+const connectionAttemps = 5;
 const deviceFoundButtonText = "Go to setup";
 export default function NfcScreen() {
   const [isDeviceFound, setIsDeviceFound] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
+  const [devices, setDevices] = useContext(AppContext);
 
   async function scanForDevice() {
     setIsScanning(true);
-    setTimeout(() => {
+    setTimeout(async () => {
+      let deviceInfo: DeviceInfo | null = null;
+      for (let i = 0; i < connectionAttemps; i++) {
+        // Override isAvailable: true, if successful (and break)
+        deviceInfo = await getDeviceAvailable();
+        if (deviceInfo) {
+          const found = devices.find((item) => item.host === deviceInfo?.host);
+
+          if (found) {
+            // If element with matching host was found, replace entry
+            devices[devices.indexOf(found)] = deviceInfo;
+            setDevices([...devices]);
+          } else {
+            // Otherwise, push new entry
+            setDevices([...devices, deviceInfo]);
+          }
+          break;
+        }
+      }
       setIsScanning(false);
       setIsDeviceFound(true);
     }, 500);
@@ -38,7 +61,7 @@ export default function NfcScreen() {
         </Text>
       </View>
       <AnimatedLottieView
-        source={NfcScan}
+        source={Wifi}
         autoPlay
         loop
         speed={0.95}
@@ -58,6 +81,7 @@ export default function NfcScreen() {
             title={defaultButtonText}
             buttonStyle={styles.buttonStyle}
             isLoading={isScanning}
+            disabled={isScanning}
             onPress={() => scanForDevice()}
           />
         )}
