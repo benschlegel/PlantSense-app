@@ -8,13 +8,15 @@ import {
 } from "react-native";
 import React, { memo, useEffect, useState } from "react";
 import { Link } from "expo-router";
+import AnimatedLottieView from "lottie-react-native";
 
 import Colors from "../../constants/Colors";
 import StyledButton from "../../components/StyledButton";
 import type { WifiInfo } from "../../constants/Types";
 import WifiEntry from "../../components/WifiEntry";
 import { removeDuplicateNetworks, typedFetch } from "../../helpers/functions";
-import { setupServerUrl } from "../../constants/Config";
+import { isDebugActive, setupServerUrl } from "../../constants/Config";
+import Wifi from "../../assets/lottie/wifi_new.json";
 
 function Networks() {
   const isDeviceAvailable = true;
@@ -33,10 +35,21 @@ function Networks() {
       setIsScanActive(false);
       setNetworks(newArr);
     });
-    setIsScanActive(true);
+    // setIsScanActive(true);
     // networks.push({ ssid: "newNet", isEncrypted: true });
     // setNetworks([...networks]);
   }
+
+  function mockNetworks() {
+    setIsScanActive(true);
+    setTimeout(() => {
+      setIsScanActive(false);
+    }, 7500);
+  }
+
+  useEffect(() => {
+    // mockNetworks();
+  }, []);
 
   // useEffect(() => {
   //   removeDuplicateNetworks(networks);
@@ -62,10 +75,26 @@ function Networks() {
               );
             })}
           {isScanActive && (
-            <View style={styles.deviceContainer}>
-              <View style={styles.plantContainer}>
-                <Text style={styles.deviceText}>Scanning...</Text>
-                <ActivityIndicator />
+            <View style={styles.loadingContainer}>
+              <View style={styles.deviceContainer}>
+                <View style={styles.plantContainer}>
+                  <Text style={styles.deviceText}>Scanning...</Text>
+                  <ActivityIndicator />
+                </View>
+              </View>
+              <View style={styles.lottieContainer}>
+                <AnimatedLottieView
+                  source={Wifi}
+                  autoPlay
+                  loop
+                  // autoSize
+                  speed={0.95}
+                  style={{
+                    opacity: 1,
+                    // height: "96%",
+                    // alignSelf: "center",
+                  }}
+                />
               </View>
             </View>
           )}
@@ -81,7 +110,7 @@ function Networks() {
             borderWidth: 0,
           }}
           disabled={isScanActive}
-          onPress={() => getNetworks()}
+          onPress={() => (isDebugActive ? mockNetworks() : getNetworks())}
         />
         {/* </Link> */}
       </View>
@@ -98,6 +127,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
     paddingVertical: 25,
     backgroundColor: Colors.light.background,
+  },
+  loadingContainer: {
+    flexDirection: "column",
+    gap: 10,
+    flex: 1,
+  },
+  lottieContainer: {
+    flex: 1,
+    backgroundColor: Colors.light.light,
+    opacity: 0.9,
+    justifyContent: "center",
+    alignItems: "center",
+    marginHorizontal: 24,
+    marginTop: 12,
+    borderRadius: 16,
   },
   topContainer: {
     flex: 1,
@@ -116,6 +160,7 @@ const styles = StyleSheet.create({
   },
   deviceContainer: {
     paddingHorizontal: 26,
+    // marginBottom: 150,
   },
   deviceText: {
     color: Colors.light.dark,

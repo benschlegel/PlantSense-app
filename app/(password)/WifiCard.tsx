@@ -50,17 +50,30 @@ export default function WifiCard({
         </View>
         <Hr height={2} style={styles.hr} />
         <View style={styles.mainContainer}>
-          <StyledInput
-            containerStyle={{ height: 70 }}
-            placeholder="wifi password..."
-            header="Password"
-            isPasswordField={true}
-            headerStyle={{ fontSize: 17 }}
-            autofocus={true}
-            value={password}
-            onChange={setPassword}
-            outlineColor={Colors.light.light}
-          />
+          {isEncrypted ? (
+            <StyledInput
+              containerStyle={{ height: 70 }}
+              placeholder="wifi password..."
+              header="Password"
+              isPasswordField={true}
+              headerStyle={{ fontSize: 17 }}
+              autofocus={true}
+              value={password}
+              onChange={setPassword}
+              outlineColor={Colors.light.light}
+            />
+          ) : (
+            <Text
+              style={{
+                color: Colors.light.light,
+                fontSize: 17,
+                opacity: 0.85,
+                textAlign: "center",
+              }}
+            >
+              This wifi is open (no password)
+            </Text>
+          )}
         </View>
       </View>
 

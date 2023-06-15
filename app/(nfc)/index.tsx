@@ -4,13 +4,15 @@ import AnimatedLottieView from "lottie-react-native";
 import { Link } from "expo-router";
 
 import NfcScan from "../../assets/lottie/nfc.json";
-import Wifi from "../../assets/lottie/wifi.json";
+import Wifi from "../../assets/lottie/wifi_new.json";
+// import Wifi from "../../assets/lottie/wifi.json";
 import Colors from "../../constants/Colors";
 import { MonoText } from "../../components/StyledText";
 import StyledButton from "../../components/StyledButton";
 import type { DeviceInfo } from "../../constants/Types";
 import { getDeviceAvailable } from "../../helpers/functions";
 import { AppContext } from "../../constants/Constants";
+import { isDebugActive } from "../../constants/Config";
 
 const defaultText =
   "Scan your PlantSense chip and connect to it's wifi to get started.";
@@ -21,7 +23,7 @@ const defaultButtonText = "Connect to device";
 const connectionAttemps = 5;
 const deviceFoundButtonText = "Go to setup";
 export default function NfcScreen() {
-  const [isDeviceFound, setIsDeviceFound] = useState(false);
+  const [isDeviceFound, setIsDeviceFound] = useState(isDebugActive);
   const [isScanning, setIsScanning] = useState(false);
   const [devices, setDevices] = useContext(AppContext);
 
@@ -126,7 +128,10 @@ const styles = StyleSheet.create({
   },
   subheaderContainer: {
     marginTop: 20,
-    marginBottom: 30,
+    // marginBottom: 20,
+    // backgroundColor: Colors.light.light,
+    // padding: 16,
+    // borderRadius: 16,
   },
   subheaderText: {
     color: Colors.light.dark,
