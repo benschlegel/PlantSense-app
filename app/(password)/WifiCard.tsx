@@ -71,7 +71,7 @@ export default function WifiCard({
                 textAlign: "center",
               }}
             >
-              This wifi is open (no password)
+              This wifi requires no password.
             </Text>
           )}
         </View>

@@ -72,12 +72,17 @@ export default function NfcScreen() {
       <View style={styles.buttonContainer}>
         {/* Switch button if device was found. This makes it easier to wrap new button with Link */}
         {isDeviceFound ? (
-          <Link href={"/(networks)"} asChild>
-            <StyledButton
-              title={deviceFoundButtonText}
-              buttonStyle={styles.buttonStyle}
-            />
-          </Link>
+          <View style={{ gap: 20 }}>
+            <Link href={"/(networks)"} asChild>
+              <StyledButton
+                title={deviceFoundButtonText}
+                buttonStyle={styles.buttonStyle}
+              />
+            </Link>
+            <Link href={"/(main)"} asChild>
+              <StyledButton title="skip" buttonStyle={styles.buttonStyle} />
+            </Link>
+          </View>
         ) : (
           <View style={{ gap: 20 }}>
             <StyledButton

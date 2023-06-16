@@ -9,7 +9,7 @@ import StyledIcon from "../../components/StyledIcon";
 import StyledButton from "../../components/StyledButton";
 import type { CredentialsResponse, Credentials } from "../../constants/Types";
 import { typedFetch } from "../../helpers/functions";
-import { setupServerUrl } from "../../constants/Config";
+import { isDebugActive, setupServerUrl } from "../../constants/Config";
 
 import WifiCard from "./WifiCard";
 
@@ -21,24 +21,28 @@ export default function PasswordScreen() {
   const [isValid, setIsValid] = useState<boolean | undefined>();
 
   function connectWithWifi() {
-    setIsValid(undefined);
-    setIsConnecting(true);
-    const payload: Credentials = { ssid: name as string, password: password };
+    if (!isDebugActive) {
+      setIsValid(undefined);
+      setIsConnecting(true);
+      const payload: Credentials = { ssid: name as string, password: password };
 
-    typedFetch<CredentialsResponse>(setupServerUrl + "/tryCredentials", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    })
-      .then((res) => {
-        console.log("Res: ", res);
-        setIsValid(res.isValid);
-        setIsConnecting(false);
+      typedFetch<CredentialsResponse>(setupServerUrl + "/tryCredentials", {
+        method: "POST",
+        body: JSON.stringify(payload),
       })
-      .catch(() => setIsConnecting(false));
-    // setTimeout(() => {
-    //   setIsConnecting(false);
-    //   setIsValid(true);
-    // }, 2000);
+        .then((res) => {
+          console.log("Res: ", res);
+          setIsValid(res.isValid);
+          setIsConnecting(false);
+        })
+        .catch(() => setIsConnecting(false));
+    } else {
+      setIsConnecting(true);
+      setTimeout(() => {
+        setIsConnecting(false);
+        setIsValid(true);
+      }, 2000);
+    }
   }
   return (
     <View style={styles.container}>

@@ -146,7 +146,7 @@ export default function SettingsScreen() {
           title="Turn off LED"
           onPress={() => sendLedRequest(0, 0, 0)}
         />
-        <Link href="/(setup)" asChild style={{ marginBottom: 20 }}>
+        <Link href="/(nfc)" asChild style={{ marginBottom: 20 }}>
           <StyledButton
             title="Go to setup"
             onPress={() => sendLedRequest(0, 0, 0)}
@@ -219,6 +219,8 @@ const styles = StyleSheet.create({
   },
   scrollContentStyle: {
     gap: 22,
+    flexGrow: 1,
+    paddingBottom: 40,
   },
   hrStyle: {
     width: "75%",

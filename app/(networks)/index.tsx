@@ -6,7 +6,7 @@ import {
   Alert,
   ActivityIndicator,
 } from "react-native";
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import { Link } from "expo-router";
 import AnimatedLottieView from "lottie-react-native";
 
@@ -18,15 +18,20 @@ import { removeDuplicateNetworks, typedFetch } from "../../helpers/functions";
 import { isDebugActive, setupServerUrl } from "../../constants/Config";
 import Wifi from "../../assets/lottie/wifi_new.json";
 
+const debugNetworks: WifiInfo[] = [
+  { ssid: "Encryped wifi", isEncrypted: true },
+  { ssid: "Open wifi", isEncrypted: false },
+];
+
 function Networks() {
   const isDeviceAvailable = true;
   const deviceFoundText = "Test1";
   const defaultText =
     "To get started, please select your home wifi and enter the password.";
   const [isScanActive, setIsScanActive] = useState(false);
-  const [networks, setNetworks] = useState<WifiInfo[]>([
-    { ssid: "Default wifi", isEncrypted: true },
-  ]);
+  const [networks, setNetworks] = useState<WifiInfo[]>(
+    isDebugActive ? debugNetworks : []
+  );
 
   async function getNetworks() {
     setIsScanActive(true);
@@ -40,16 +45,28 @@ function Networks() {
     // setNetworks([...networks]);
   }
 
-  function mockNetworks() {
+  const mockNetworks = useCallback(() => {
     setIsScanActive(true);
     setTimeout(() => {
       setIsScanActive(false);
-    }, 7500);
-  }
+      networks.push({ ssid: "newNet", isEncrypted: true });
+      setNetworks([...networks]);
+    }, 5000);
+  }, [networks]);
+  // function mockNetworks() {
+  //   setIsScanActive(true);
+  //   setTimeout(() => {
+  //     setIsScanActive(false);
+  //     networks.push({ ssid: "newNet", isEncrypted: true });
+  //     setNetworks([...networks]);
+  //   }, 7500);
+  // }
 
   useEffect(() => {
-    // mockNetworks();
-  }, []);
+    if (!isDebugActive) {
+      mockNetworks();
+    }
+  }, [mockNetworks]);
 
   // useEffect(() => {
   //   removeDuplicateNetworks(networks);
@@ -113,6 +130,12 @@ function Networks() {
           onPress={() => (isDebugActive ? mockNetworks() : getNetworks())}
         />
         {/* </Link> */}
+      </View>
+      <View style={styles.deviceNotFoundContainer}>
+        <Text style={{ color: Colors.light.dark }}>{"Wifi not found? "}</Text>
+        <Text style={{ color: Colors.light.dark, fontWeight: "bold" }}>
+          click here
+        </Text>
       </View>
       <View style={styles.placeholder} />
     </View>
@@ -183,12 +206,21 @@ const styles = StyleSheet.create({
     paddingRight: 16,
   },
   placeholder: {
-    marginTop: 40,
+    marginTop: 30,
   },
   networkContainer: {
-    flex: 1,
+    flexGrow: 1,
     justifyContent: "flex-start",
     gap: 22,
-    marginVertical: 30,
+    // marginVertical: 30,
+    paddingTop: 32,
+    paddingBottom: 32,
+  },
+  deviceNotFoundContainer: {
+    display: "flex",
+    flexDirection: "row",
+    marginTop: -12,
+    marginBottom: 50,
+    marginLeft: 10,
   },
 });
