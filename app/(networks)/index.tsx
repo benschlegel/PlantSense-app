@@ -15,8 +15,7 @@ import type { WifiInfo } from "../../constants/Types";
 import WifiEntry from "../../components/WifiEntry";
 import { removeDuplicateNetworks, typedFetch } from "../../helpers/functions";
 import { isDebugActive, setupServerUrl } from "../../constants/Config";
-import Wifi from "../../assets/lottie/wifi_new.json";
-import Hr from "../../components/Hr";
+import Wifi from "../../assets/lottie/wifi_android.json";
 
 const debugNetworks: WifiInfo[] = [
   { ssid: "Encryped wifi", isEncrypted: true },
