@@ -47,7 +47,7 @@ function Networks() {
     setTimeout(() => {
       setIsScanActive(false);
       networks.push({
-        ssid: "Mega long wifi name that is way too long",
+        ssid: "WWWWWWWWWWWWWW",
         isEncrypted: true,
       });
       setNetworks([...networks]);
@@ -206,9 +206,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "flex-start",
     gap: 22,
-    // marginVertical: 30,
-    // // paddingTop: 32,
-    // paddingBottom: 32,
   },
   networkOuter: {
     marginTop: 32,

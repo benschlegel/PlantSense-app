@@ -26,20 +26,26 @@ export default function WifiCard({
   isConnecting,
   connectWithWifi,
 }: WifiCardProps) {
+  const isLongText = name.length > 15;
   return (
     <>
       <View style={styles.notificationContainer}>
         <View style={styles.notificationTopRow}>
           <View style={styles.deviceInfoContainer}>
-            <View style={styles.nameContainer}>
-              <StyledIcon
-                name="wifi"
-                iconSize={22}
-                style={styles.wifiIcon}
-                color={Colors.light.light}
-              />
-              <Text style={styles.deviceNameText}>{name}</Text>
-            </View>
+            <StyledIcon
+              name="wifi"
+              iconSize={22}
+              style={styles.wifiIcon}
+              color={Colors.light.light}
+            />
+            <Text
+              style={[
+                styles.deviceNameText,
+                isLongText && styles.smallDeviceNameText,
+              ]}
+            >
+              {name}
+            </Text>
             <StyledIcon
               name={isEncrypted ? "lock" : "unlock"}
               iconSize={20}
@@ -143,22 +149,20 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-
-    flex: 1,
+    // backgroundColor: "red",
+    // flex: 1,
   },
   deviceNameText: {
     fontSize: 28,
     fontWeight: "bold",
     color: Colors.light.text,
+    flex: 1,
+  },
+  smallDeviceNameText: {
+    fontSize: 24,
   },
   hr: {
     marginVertical: 4,
   },
   wifiIcon: { marginRight: 10 },
-  nameContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    alignSelf: "center",
-  },
 });
