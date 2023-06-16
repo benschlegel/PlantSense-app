@@ -25,17 +25,10 @@ export default function WifiEntry({ name, isEncrypted }: WifiEntryProps) {
         // onPress={() => twoOptionAlertHandler(name)}
       >
         <View style={styles.wifiContainer}>
-          <View style={styles.nameContainer}>
-            <StyledIcon
-              name="wifi"
-              iconSize={17}
-              color={Colors.light.dark}
-              style={{ marginRight: 8 }}
-            />
-            <Text style={[styles.deviceText, { fontWeight: "bold" }]}>
-              {name}
-            </Text>
-          </View>
+          <StyledIcon name="wifi" iconSize={17} color={Colors.light.dark} />
+          <Text numberOfLines={1} style={styles.deviceText}>
+            {name}
+          </Text>
           <StyledIcon
             name={isEncrypted ? "lock" : "unlock"}
             iconSize={18}
@@ -54,19 +47,21 @@ const styles = StyleSheet.create({
   },
   wifiContainer: {
     backgroundColor: Colors.light.light,
-    height: 46,
+    // height: 50,
     borderRadius: 10,
     justifyContent: "space-between",
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 16,
+    display: "flex",
+    paddingVertical: 16,
+    gap: 8,
+    // paddingRight: 28,
   },
   deviceText: {
     color: Colors.light.dark,
-  },
-  nameContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
+    fontWeight: "bold",
+    flex: 1,
+    // backgroundColor: "red",
   },
 });

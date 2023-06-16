@@ -49,7 +49,10 @@ function Networks() {
     setIsScanActive(true);
     setTimeout(() => {
       setIsScanActive(false);
-      networks.push({ ssid: "newNet", isEncrypted: true });
+      networks.push({
+        ssid: "Mega long wifi name that is way too long",
+        isEncrypted: true,
+      });
       setNetworks([...networks]);
     }, 5000);
   }, [networks]);
@@ -79,7 +82,11 @@ function Networks() {
         {isDeviceAvailable ? deviceFoundText : defaultText}
       </Text>
       <View style={styles.topContainer}>
-        <ScrollView contentContainerStyle={styles.networkContainer}>
+        <ScrollView
+          contentContainerStyle={styles.networkContainer}
+          style={styles.networkOuter}
+          scrollEnabled={!isScanActive}
+        >
           {isDeviceAvailable &&
             !isScanActive &&
             networks.map((network, index) => {
@@ -126,6 +133,7 @@ function Networks() {
             backgroundColor: Colors.light.background,
             borderWidth: 0,
           }}
+          containerStyle={{ paddingTop: 16 }}
           disabled={isScanActive}
           onPress={() => (isDebugActive ? mockNetworks() : getNetworks())}
         />
@@ -165,6 +173,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 24,
     marginTop: 12,
     borderRadius: 16,
+    paddingVertical: 165,
   },
   topContainer: {
     flex: 1,
@@ -206,15 +215,20 @@ const styles = StyleSheet.create({
     paddingRight: 16,
   },
   placeholder: {
-    marginTop: 30,
+    marginTop: 20,
   },
   networkContainer: {
     flexGrow: 1,
     justifyContent: "flex-start",
     gap: 22,
     // marginVertical: 30,
-    paddingTop: 32,
+    // // paddingTop: 32,
+    // paddingBottom: 32,
+  },
+  networkOuter: {
+    marginTop: 32,
     paddingBottom: 32,
+    // backgroundColor: "red",
   },
   deviceNotFoundContainer: {
     display: "flex",
