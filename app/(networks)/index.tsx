@@ -3,7 +3,6 @@ import {
   StyleSheet,
   Text,
   View,
-  Alert,
   ActivityIndicator,
 } from "react-native";
 import React, { memo, useCallback, useEffect, useState } from "react";
@@ -17,6 +16,7 @@ import WifiEntry from "../../components/WifiEntry";
 import { removeDuplicateNetworks, typedFetch } from "../../helpers/functions";
 import { isDebugActive, setupServerUrl } from "../../constants/Config";
 import Wifi from "../../assets/lottie/wifi_new.json";
+import Hr from "../../components/Hr";
 
 const debugNetworks: WifiInfo[] = [
   { ssid: "Encryped wifi", isEncrypted: true },
@@ -40,9 +40,6 @@ function Networks() {
       setIsScanActive(false);
       setNetworks(newArr);
     });
-    // setIsScanActive(true);
-    // networks.push({ ssid: "newNet", isEncrypted: true });
-    // setNetworks([...networks]);
   }
 
   const mockNetworks = useCallback(() => {
@@ -56,25 +53,13 @@ function Networks() {
       setNetworks([...networks]);
     }, 5000);
   }, [networks]);
-  // function mockNetworks() {
-  //   setIsScanActive(true);
-  //   setTimeout(() => {
-  //     setIsScanActive(false);
-  //     networks.push({ ssid: "newNet", isEncrypted: true });
-  //     setNetworks([...networks]);
-  //   }, 7500);
-  // }
 
+  // Start loading networks on navigate
   useEffect(() => {
     if (!isDebugActive) {
       mockNetworks();
     }
   }, [mockNetworks]);
-
-  // useEffect(() => {
-  //   removeDuplicateNetworks(networks);
-  //   setNetworks([...networks]);
-  // }, []);
   return (
     <View style={styles.container}>
       <Text style={styles.headerText}>Connect your device to wifi</Text>
