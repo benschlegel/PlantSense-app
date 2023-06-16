@@ -63,7 +63,7 @@ export default function NfcScreen() {
         </Text>
       </View>
       <AnimatedLottieView
-        source={Wifi}
+        source={NfcScan}
         autoPlay
         loop
         speed={0.95}

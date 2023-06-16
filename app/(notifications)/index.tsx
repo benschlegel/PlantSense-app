@@ -112,12 +112,13 @@ const styles = StyleSheet.create({
   },
   notificationContainer: {
     display: "flex",
+    flexGrow: 1,
     flexDirection: "column",
     alignItems: "center",
     gap: 24,
     marginVertical: 32,
     // marginBottom: 32,
-    // paddingBottom: 32,
+    paddingBottom: 60,
     // marginTop: 32,
   },
   notificationContainerStyle: {
