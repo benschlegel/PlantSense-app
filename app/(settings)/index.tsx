@@ -1,5 +1,4 @@
 import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
-import AnimatedLottieView from "lottie-react-native";
 import { useCallback, useEffect } from "react";
 import { Link } from "expo-router";
 

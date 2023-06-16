@@ -4,7 +4,7 @@ import AnimatedLottieView from "lottie-react-native";
 import { Link } from "expo-router";
 
 import NfcScan from "../../assets/lottie/nfc.json";
-import Wifi from "../../assets/lottie/wifi_new.json";
+import DeviceFound from "../../assets/lottie/device_found.json";
 // import Wifi from "../../assets/lottie/wifi.json";
 import Colors from "../../constants/Colors";
 import { MonoText } from "../../components/StyledText";
@@ -23,9 +23,21 @@ const defaultButtonText = "Connect to device";
 const connectionAttemps = 5;
 const deviceFoundButtonText = "Go to setup";
 export default function NfcScreen() {
-  const [isDeviceFound, setIsDeviceFound] = useState(isDebugActive);
+  const [isDeviceFound, setIsDeviceFound] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const [devices, setDevices] = useContext(AppContext);
+
+  function handleScan() {
+    if (!isDebugActive) {
+      scanForDevice();
+    } else {
+      setIsScanning(true);
+      setTimeout(() => {
+        setIsScanning(false);
+        setIsDeviceFound(true);
+      }, 1500);
+    }
+  }
 
   async function scanForDevice() {
     setIsScanning(true);
@@ -50,7 +62,7 @@ export default function NfcScreen() {
       }
       setIsScanning(false);
       setIsDeviceFound(true);
-    }, 500);
+    }, 1500);
   }
   return (
     <View style={styles.container}>
@@ -62,27 +74,38 @@ export default function NfcScreen() {
           {isDeviceFound ? deviceFoundText : defaultText}
         </Text>
       </View>
-      <AnimatedLottieView
-        source={NfcScan}
-        autoPlay
-        loop
-        speed={0.95}
-        style={styles.lottie}
-      />
+      {isDeviceFound ? (
+        <AnimatedLottieView
+          source={DeviceFound}
+          autoPlay
+          loop={false}
+          speed={0.95}
+          style={styles.lottie}
+          colorFilters={[
+            {
+              keypath: "Capa de formas 3",
+              color: "#AD7BE9",
+            },
+          ]}
+        />
+      ) : (
+        <AnimatedLottieView
+          source={NfcScan}
+          autoPlay
+          loop
+          speed={0.95}
+          style={styles.lottie}
+        />
+      )}
       <View style={styles.buttonContainer}>
         {/* Switch button if device was found. This makes it easier to wrap new button with Link */}
         {isDeviceFound ? (
-          <View style={{ gap: 20 }}>
-            <Link href={"/(networks)"} asChild>
-              <StyledButton
-                title={deviceFoundButtonText}
-                buttonStyle={styles.buttonStyle}
-              />
-            </Link>
-            <Link href={"/(main)"} asChild>
-              <StyledButton title="skip" buttonStyle={styles.buttonStyle} />
-            </Link>
-          </View>
+          <Link href={"/(networks)"} asChild>
+            <StyledButton
+              title={deviceFoundButtonText}
+              buttonStyle={styles.buttonStyle}
+            />
+          </Link>
         ) : (
           <View style={{ gap: 20 }}>
             <StyledButton
@@ -90,7 +113,7 @@ export default function NfcScreen() {
               buttonStyle={styles.buttonStyle}
               isLoading={isScanning}
               disabled={isScanning}
-              onPress={() => scanForDevice()}
+              onPress={() => handleScan()}
             />
             <Link href={"/(main)"} asChild>
               <StyledButton title="skip" buttonStyle={styles.buttonStyle} />
