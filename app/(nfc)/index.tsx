@@ -1,4 +1,5 @@
-import { StyleSheet, Text, View } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
+import { Platform, StyleSheet, Text, View } from "react-native";
 import React, { useContext, useState } from "react";
 import AnimatedLottieView from "lottie-react-native";
 import { Link } from "expo-router";
@@ -26,6 +27,10 @@ export default function NfcScreen() {
   const [isDeviceFound, setIsDeviceFound] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const [devices, setDevices] = useContext(AppContext);
+
+  const topMargin: StyleProp<ViewStyle> = {
+    marginTop: Platform.OS === "ios" ? 60 : 50,
+  };
 
   function handleScan() {
     if (!isDebugActive) {
@@ -62,11 +67,11 @@ export default function NfcScreen() {
       }
       setIsScanning(false);
       setIsDeviceFound(true);
-    }, 1500);
+    }, 750);
   }
   return (
     <View style={styles.container}>
-      <View style={styles.headerContainer}>
+      <View style={[styles.headerContainer, topMargin]}>
         <MonoText style={styles.headerText}>PlantSense</MonoText>
       </View>
       <View style={styles.subheaderContainer}>
@@ -74,25 +79,22 @@ export default function NfcScreen() {
           {isDeviceFound ? deviceFoundText : defaultText}
         </Text>
       </View>
+      <View style={styles.placeholder} />
       {isDeviceFound ? (
         <AnimatedLottieView
           source={DeviceFound}
           autoPlay
           loop={false}
           speed={0.95}
-          style={styles.lottie}
-          colorFilters={[
-            {
-              keypath: "Capa de formas 3",
-              color: "#AD7BE9",
-            },
-          ]}
+          style={[styles.lottie, styles.deviceFoundAnimation]}
+          resizeMode="cover"
         />
       ) : (
         <AnimatedLottieView
           source={NfcScan}
           autoPlay
           loop
+          resizeMode="cover"
           speed={0.95}
           style={styles.lottie}
         />
@@ -107,7 +109,7 @@ export default function NfcScreen() {
             />
           </Link>
         ) : (
-          <View style={{ gap: 20 }}>
+          <View style={styles.buttons}>
             <StyledButton
               title={defaultButtonText}
               buttonStyle={styles.buttonStyle}
@@ -132,7 +134,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
   },
   headerContainer: {
-    marginTop: 70,
+    // marginTop: 70,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -142,20 +144,25 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   lottie: {
-    height: 10,
-    // width: "80%",
-    flex: 1,
+    width: "100%",
+    // backgroundColor: "red",
+    marginVertical: 12,
+    flexGrow: 1,
     justifyContent: "center",
     alignSelf: "center",
     // backgroundColor: "red",
   },
+  deviceFoundAnimation: {
+    marginVertical: 48,
+  },
+  buttons: { gap: 20 },
   buttonContainer: {
     // flex: 1,
-    marginBottom: 100,
+    marginBottom: 60,
     marginTop: 20,
   },
   subheaderContainer: {
-    marginTop: 20,
+    marginTop: 12,
     // marginBottom: 20,
     // backgroundColor: Colors.light.light,
     // padding: 16,
@@ -170,5 +177,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 14,
     width: "60%",
+  },
+  placeholder: {
+    marginTop: 12,
   },
 });
