@@ -4,6 +4,7 @@ import {
   Text,
   View,
   ActivityIndicator,
+  RefreshControl,
 } from "react-native";
 import React, { memo, useCallback, useEffect, useState } from "react";
 import { Link } from "expo-router";
@@ -29,6 +30,7 @@ function Networks() {
   const defaultText =
     "To get started, please select your home wifi and enter the password.";
   const [isScanActive, setIsScanActive] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [networks, setNetworks] = useState<WifiInfo[]>(
     isDebugActive ? debugNetworks : []
   );
@@ -40,6 +42,14 @@ function Networks() {
       setIsScanActive(false);
       setNetworks(newArr);
     });
+  }
+
+  function loadNetworks() {
+    if (isDebugActive) {
+      mockNetworks();
+    } else {
+      getNetworks();
+    }
   }
 
   const mockNetworks = useCallback(() => {
@@ -96,7 +106,6 @@ function Networks() {
                   source={Wifi}
                   autoPlay
                   loop
-                  // autoSize
                   speed={0.95}
                   style={{
                     opacity: 1,
@@ -120,7 +129,7 @@ function Networks() {
           }}
           containerStyle={{ paddingTop: 16 }}
           disabled={isScanActive}
-          onPress={() => (isDebugActive ? mockNetworks() : getNetworks())}
+          onPress={() => loadNetworks()}
         />
         {/* </Link> */}
       </View>
@@ -156,7 +165,7 @@ const styles = StyleSheet.create({
     opacity: 0.95,
     justifyContent: "center",
     alignItems: "center",
-    marginHorizontal: 24,
+    marginHorizontal: 25,
     marginTop: 12,
     marginBottom: 16,
     borderRadius: 16,
