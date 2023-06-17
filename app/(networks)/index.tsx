@@ -24,7 +24,8 @@ const debugNetworks: WifiInfo[] = [
 
 function Networks() {
   const isDeviceAvailable = true;
-  const deviceFoundText = "Test1";
+  const deviceFoundText =
+    "To get started, choose a wifi network to connect your PlantSense device to.";
   const defaultText =
     "To get started, please select your home wifi and enter the password.";
   const [isScanActive, setIsScanActive] = useState(false);
@@ -50,7 +51,7 @@ function Networks() {
         isEncrypted: true,
       });
       setNetworks([...networks]);
-    }, 5000);
+    }, 30000);
   }, [networks]);
 
   // Start loading networks on navigate
@@ -87,7 +88,7 @@ function Networks() {
               <View style={styles.deviceContainer}>
                 <View style={styles.plantContainer}>
                   <Text style={styles.deviceText}>Scanning...</Text>
-                  <ActivityIndicator />
+                  <ActivityIndicator color={Colors.light.dark} />
                 </View>
               </View>
               <View style={styles.lottieContainer}>
@@ -129,7 +130,7 @@ function Networks() {
           click here
         </Text>
       </View>
-      <View style={styles.placeholder} />
+      {/* <View style={styles.placeholder} /> */}
     </View>
   );
 }
@@ -149,15 +150,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   lottieContainer: {
-    flex: 1,
+    // flex: 1,
+    flexGrow: 1,
     backgroundColor: Colors.light.light,
-    opacity: 0.9,
+    opacity: 0.95,
     justifyContent: "center",
     alignItems: "center",
     marginHorizontal: 24,
     marginTop: 12,
+    marginBottom: 16,
     borderRadius: 16,
-    paddingVertical: 165,
+    // paddingVertical: 165,
   },
   topContainer: {
     flex: 1,
@@ -171,7 +174,7 @@ const styles = StyleSheet.create({
   headerText: {
     fontWeight: "bold",
     color: Colors.light.dark,
-    fontSize: 25,
+    fontSize: 24,
     opacity: 0.8,
   },
   deviceContainer: {
@@ -198,17 +201,15 @@ const styles = StyleSheet.create({
     paddingLeft: 22,
     paddingRight: 16,
   },
-  placeholder: {
-    marginTop: 20,
-  },
   networkContainer: {
     flexGrow: 1,
     justifyContent: "flex-start",
     gap: 22,
+    // backgroundColor: "red",
   },
   networkOuter: {
     marginTop: 32,
-    paddingBottom: 32,
+    // paddingBottom: 32,
     // backgroundColor: "red",
   },
   deviceNotFoundContainer: {
