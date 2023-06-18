@@ -1,22 +1,46 @@
-import { StyleSheet, Text, View } from "react-native";
-import { useState } from "react";
+import type { TouchableOpacity } from "react-native";
+import { Keyboard, StyleSheet, Text, View } from "react-native";
+import type { LegacyRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "expo-router";
 
 import Colors from "../../constants/Colors";
 import WifiCard from "../(password)/WifiCard";
 import StyledButton from "../../components/StyledButton";
+import { isDebugActive } from "../../constants/Config";
 
 export default function DeviceNameScreen() {
   const [name, setName] = useState("");
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [isValid, setIsValid] = useState<boolean | undefined>();
+
+  useEffect(() => {
+    if (isValid) {
+      // Dismiss keyboard so next button becomes visible
+      Keyboard.dismiss();
+    }
+  }, [isValid]);
+
+  function setDeviceName() {
+    setIsConnecting(true);
+    if (isDebugActive) {
+      setTimeout(() => {
+        setIsValid(true);
+        setIsConnecting(false);
+      }, 500);
+    } else {
+      //
+    }
+  }
   return (
     <View style={styles.container}>
       <View style={styles.flex}>
         <WifiCard
           name={"Device name"}
-          connectWithWifi={() => console.log("test")}
-          isConnecting={false}
+          connectWithWifi={setDeviceName}
+          isConnecting={isConnecting}
           isEncrypted={true}
-          isValid={true}
+          isValid={isValid}
           password={name}
           setPassword={setName}
           inputHeader="Set your device name (plant name, nickname, etc)"
@@ -26,7 +50,11 @@ export default function DeviceNameScreen() {
       </View>
       <View style={styles.buttonContainer}>
         <Link href={"/(networks)"} asChild>
-          <StyledButton title="Next" buttonStyle={styles.nextButton} />
+          <StyledButton
+            title="Next"
+            buttonStyle={styles.nextButton}
+            disabled={!isValid}
+          />
         </Link>
       </View>
     </View>

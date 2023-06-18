@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
+import { forwardRef, type LegacyRef } from "react";
 
 import Colors from "../constants/Colors";
 
@@ -20,16 +21,19 @@ type StyledButtonProps = {
   disabledOpacity?: number;
 };
 
-export default function StyledButton({
-  title,
-  buttonStyle,
-  textStyle,
-  containerStyle,
-  onPress,
-  disabled,
-  isLoading,
-  disabledOpacity,
-}: StyledButtonProps) {
+const StyledButton = forwardRef(function Button(
+  {
+    title,
+    buttonStyle,
+    textStyle,
+    containerStyle,
+    onPress,
+    disabled,
+    isLoading,
+    disabledOpacity,
+  }: StyledButtonProps,
+  ref?: LegacyRef<TouchableOpacity>
+) {
   const opacity: StyleProp<ViewStyle> = {
     opacity: disabledOpacity ? disabledOpacity : 0.45,
   };
@@ -39,6 +43,7 @@ export default function StyledButton({
         disabled={disabled}
         style={[styles.buttonColorContainer, buttonStyle, disabled && opacity]}
         onPress={onPress}
+        ref={ref}
       >
         <Text style={textStyle ? textStyle : styles.textStyle}>{title}</Text>
         {isLoading && (
@@ -50,7 +55,9 @@ export default function StyledButton({
       </TouchableOpacity>
     </View>
   );
-}
+});
+
+export default StyledButton;
 
 const styles = StyleSheet.create({
   container: {

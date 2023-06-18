@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     paddingHorizontal: 24,
     paddingVertical: 14,
-    width: "63%",
+    width: "70%",
   },
   placeholder: {
     marginTop: 12,

@@ -164,7 +164,7 @@ function RootLayoutNav() {
               name="(device-name)"
               options={{
                 headerShown: true,
-                title: "Name",
+                title: "Setup",
                 headerStyle: { backgroundColor: Colors.light.primary2 },
                 headerTintColor: "#fff",
               }}
