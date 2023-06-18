@@ -8,11 +8,13 @@ import {
 import { NotificationText } from "../constants/Constants";
 import type {
   DeviceInfo,
+  DeviceInfoPayload,
   NotificationStatus,
   WifiInfo,
 } from "../constants/Types";
 
 const deleteNotificationEndpoint = "/clearNotification";
+// TODO: update with hostName
 export async function deleteNotification(deviceName: string, index: number) {
   // Add '?' for parameter, URLSearchParams handles the rest
   const response = await fetch(
@@ -59,6 +61,7 @@ export function getDeviceAvailable(): Promise<null | DeviceInfo> {
   return resultPromise;
 }
 
+// TODO: dead/old endpoint, remove
 /**
  * Send the device config to the microcontroller.
  * IMPORTANT: Device needs to be connected to microcontroller AP for this to work (reachable under 192.168.111.1)
@@ -143,6 +146,33 @@ export async function sendLedRequest(red: number, green: number, blue: number) {
     .catch((error) => {
       console.error("Error:", error);
     });
+}
+
+/**
+ * Sets the deviceName on the microcontroller
+ * @param name deviceName to be set
+ * @returns true, if successful or false, if not successful
+ */
+export async function setDeviceName(name: string): Promise<boolean> {
+  const payload: DeviceInfoPayload = {
+    deviceName: name,
+  };
+
+  return new Promise<boolean>((resolve, reject) => {
+    fetch(setupServerUrl + "/deviceInfo", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    })
+      .then(() => {
+        resolve(true);
+      })
+      .catch(() => {
+        resolve(false);
+      });
+  });
 }
 
 /**

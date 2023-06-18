@@ -61,15 +61,18 @@ function Networks() {
         isEncrypted: true,
       });
       setNetworks([...networks]);
-    }, 30000);
+    }, 5000);
   }, [networks]);
 
+  // TODO: figure out why networks wont load
   // Start loading networks on navigate
-  useEffect(() => {
-    if (!isDebugActive) {
-      mockNetworks();
-    }
-  }, [mockNetworks]);
+  // useEffect(() => {
+  //   if (!isDebugActive) {
+  //     mockNetworks();
+  //   } else {
+  //     getNetworks();
+  //   }
+  // }, [mockNetworks]);
   return (
     <View style={styles.container}>
       <Text style={styles.headerText}>Connect your device to wifi</Text>

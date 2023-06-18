@@ -8,6 +8,7 @@ import Colors from "../../constants/Colors";
 import WifiCard from "../(password)/WifiCard";
 import StyledButton from "../../components/StyledButton";
 import { isDebugActive } from "../../constants/Config";
+import { setDeviceConfig, setDeviceName } from "../../helpers/functions";
 
 export default function DeviceNameScreen() {
   const [name, setName] = useState("");
@@ -15,13 +16,13 @@ export default function DeviceNameScreen() {
   const [isValid, setIsValid] = useState<boolean | undefined>();
 
   useEffect(() => {
-    if (isValid) {
+    if (isValid && !isConnecting) {
       // Dismiss keyboard so next button becomes visible
       Keyboard.dismiss();
     }
-  }, [isValid]);
+  }, [isConnecting, isValid]);
 
-  function setDeviceName() {
+  async function setDeviceNameFunc() {
     setIsConnecting(true);
     if (isDebugActive) {
       setTimeout(() => {
@@ -29,7 +30,11 @@ export default function DeviceNameScreen() {
         setIsConnecting(false);
       }, 500);
     } else {
-      //
+      setIsConnecting(true);
+      setDeviceName(name).then((res) => {
+        setIsConnecting(false);
+        setIsValid(res);
+      });
     }
   }
   return (
@@ -37,7 +42,7 @@ export default function DeviceNameScreen() {
       <View style={styles.flex}>
         <WifiCard
           name={"Device name"}
-          connectWithWifi={setDeviceName}
+          connectWithWifi={setDeviceNameFunc}
           isConnecting={isConnecting}
           isEncrypted={true}
           isValid={isValid}
@@ -46,6 +51,7 @@ export default function DeviceNameScreen() {
           inputHeader="Set your device name (plant name, nickname, etc)"
           successText="Name set!"
           buttonText="Update name"
+          placeholder="Your device name..."
         />
       </View>
       <View style={styles.buttonContainer}>

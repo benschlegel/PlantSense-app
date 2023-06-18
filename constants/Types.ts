@@ -36,6 +36,10 @@ export type Credentials = {
   password: string;
 };
 
+export type DeviceInfoPayload = {
+  deviceName: string;
+};
+
 export type DeviceInfoSetter = Dispatch<SetStateAction<DeviceInfo[]>>;
 
 export type AppContextType = [DeviceInfo[], DeviceInfoSetter];
