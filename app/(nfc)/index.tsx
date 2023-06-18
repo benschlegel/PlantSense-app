@@ -1,8 +1,8 @@
 import type { StyleProp, ViewStyle } from "react-native";
 import { Platform, StyleSheet, Text, View } from "react-native";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import AnimatedLottieView from "lottie-react-native";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 
 import NfcScan from "../../assets/lottie/nfc.json";
 import DeviceFound from "../../assets/lottie/device_found.json";
@@ -22,15 +22,26 @@ const deviceFoundText =
 
 const defaultButtonText = "Connect to device";
 const connectionAttemps = 5;
-const deviceFoundButtonText = "Go to setup";
+const deviceFoundButtonText = "Proceeding to setup";
+
+const isAutoProceeding = false;
 export default function NfcScreen() {
   const [isDeviceFound, setIsDeviceFound] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const [devices, setDevices] = useContext(AppContext);
+  const router = useRouter();
 
   const topMargin: StyleProp<ViewStyle> = {
     marginTop: Platform.OS === "ios" ? 60 : 50,
   };
+
+  useEffect(() => {
+    if (isDeviceFound && isAutoProceeding) {
+      setTimeout(() => {
+        router.push("/(networks)");
+      }, 6000);
+    }
+  }, [isDeviceFound, router]);
 
   function handleScan() {
     if (!isDebugActive) {
@@ -105,6 +116,7 @@ export default function NfcScreen() {
           <Link href={"/(networks)"} asChild>
             <StyledButton
               title={deviceFoundButtonText}
+              isLoading={isDeviceFound && isAutoProceeding}
               buttonStyle={styles.buttonStyle}
             />
           </Link>
@@ -174,9 +186,9 @@ const styles = StyleSheet.create({
   },
   buttonStyle: {
     borderWidth: 0,
-    paddingHorizontal: 16,
+    paddingHorizontal: 24,
     paddingVertical: 14,
-    width: "60%",
+    width: "63%",
   },
   placeholder: {
     marginTop: 12,
