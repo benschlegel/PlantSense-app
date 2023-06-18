@@ -24,6 +24,8 @@ const defaultButtonText = "Connect to device";
 const connectionAttemps = 5;
 const deviceFoundButtonText = "Proceeding to setup";
 
+const redirectHref = "/(device-name)";
+
 const isAutoProceeding = false;
 export default function NfcScreen() {
   const [isDeviceFound, setIsDeviceFound] = useState(false);
@@ -38,7 +40,7 @@ export default function NfcScreen() {
   useEffect(() => {
     if (isDeviceFound && isAutoProceeding) {
       setTimeout(() => {
-        router.push("/(networks)");
+        router.push(redirectHref);
       }, 6000);
     }
   }, [isDeviceFound, router]);
@@ -113,7 +115,7 @@ export default function NfcScreen() {
       <View style={styles.buttonContainer}>
         {/* Switch button if device was found. This makes it easier to wrap new button with Link */}
         {isDeviceFound ? (
-          <Link href={"/(networks)"} asChild>
+          <Link href={redirectHref} asChild>
             <StyledButton
               title={deviceFoundButtonText}
               isLoading={isDeviceFound && isAutoProceeding}

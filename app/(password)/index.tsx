@@ -55,6 +55,7 @@ export default function PasswordScreen() {
           isValid={isValid}
           password={password}
           setPassword={setPassword}
+          isPasswordCard={true}
         />
       )}
       {/* <View style={{ flex: 8 }} /> */}

@@ -15,6 +15,11 @@ type WifiCardProps = {
   isValid: boolean | undefined;
   isConnecting: boolean;
   connectWithWifi: () => void;
+  inputHeader?: string;
+  successText?: string;
+  isPasswordCard?: boolean;
+  buttonText?: string;
+  placeholder?: string;
 };
 
 export default function WifiCard({
@@ -25,6 +30,11 @@ export default function WifiCard({
   setPassword,
   isConnecting,
   connectWithWifi,
+  inputHeader,
+  successText,
+  isPasswordCard,
+  buttonText,
+  placeholder,
 }: WifiCardProps) {
   const isLongText = name.length > 15;
   return (
@@ -32,12 +42,14 @@ export default function WifiCard({
       <View style={styles.notificationContainer}>
         <View style={styles.notificationTopRow}>
           <View style={styles.deviceInfoContainer}>
-            <StyledIcon
-              name="wifi"
-              iconSize={22}
-              style={styles.wifiIcon}
-              color={Colors.light.light}
-            />
+            {isPasswordCard && (
+              <StyledIcon
+                name={"wifi"}
+                iconSize={22}
+                style={styles.wifiIcon}
+                color={Colors.light.light}
+              />
+            )}
             <Text
               style={[
                 styles.deviceNameText,
@@ -46,22 +58,24 @@ export default function WifiCard({
             >
               {name}
             </Text>
-            <StyledIcon
-              name={isEncrypted ? "lock" : "unlock"}
-              iconSize={20}
-              color={Colors.light.light}
-              style={{ marginTop: 2 }}
-            />
+            {isPasswordCard && (
+              <StyledIcon
+                name={isEncrypted ? "lock" : "unlock"}
+                iconSize={20}
+                color={Colors.light.light}
+                style={{ marginTop: 2 }}
+              />
+            )}
           </View>
         </View>
         <Hr height={2} style={styles.hr} />
         <View style={styles.mainContainer}>
           {isEncrypted ? (
             <StyledInput
-              containerStyle={{ height: 70 }}
-              placeholder="wifi password..."
-              header="Password"
-              isPasswordField={true}
+              containerStyle={{ height: isPasswordCard ? 75 : 95 }}
+              placeholder={placeholder ? placeholder : "wifi password..."}
+              header={inputHeader ? inputHeader : "Password"}
+              isPasswordField={isPasswordCard ? true : false}
               headerStyle={{ fontSize: 17 }}
               autofocus={true}
               value={password}
@@ -90,13 +104,15 @@ export default function WifiCard({
           </Text>
         )}
         {isValid === true && (
-          <Text style={styles.successText}>Wifi connected!</Text>
+          <Text style={styles.successText}>
+            {successText ? successText : "Wifi connected!"}
+          </Text>
         )}
       </View>
 
       <View style={styles.buttonContainer}>
         <StyledButton
-          title="Connect"
+          title={buttonText ? buttonText : "Connect"}
           containerStyle={{ width: "100%" }}
           buttonStyle={{ borderWidth: 0, width: "70%" }}
           disabled={isConnecting}

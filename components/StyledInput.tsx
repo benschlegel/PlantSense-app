@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   inputStyle: {
     // width: "100%",
     color: Colors.light.light,
-    flex: 1,
+    flexGrow: 1,
     height: 46,
     paddingLeft: 16,
   },
