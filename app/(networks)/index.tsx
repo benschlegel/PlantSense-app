@@ -1,3 +1,4 @@
+import type { StyleProp, ViewStyle } from "react-native";
 import {
   ScrollView,
   StyleSheet,
@@ -35,13 +36,18 @@ function Networks() {
     isDebugActive ? debugNetworks : []
   );
 
-  async function getNetworks() {
+  function getNetworks() {
     setIsScanActive(true);
-    typedFetch<WifiInfo[]>(setupServerUrl + "/networks").then((res) => {
-      const newArr = removeDuplicateNetworks(res);
-      setIsScanActive(false);
-      setNetworks(newArr);
-    });
+    typedFetch<WifiInfo[]>(setupServerUrl + "/networks")
+      .then((res) => {
+        const newArr = removeDuplicateNetworks(res);
+        setIsScanActive(false);
+        setNetworks(newArr);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsScanActive(false);
+      });
   }
 
   function loadNetworks() {
@@ -66,13 +72,10 @@ function Networks() {
 
   // TODO: figure out why networks wont load
   // Start loading networks on navigate
-  // useEffect(() => {
-  //   if (!isDebugActive) {
-  //     mockNetworks();
-  //   } else {
-  //     getNetworks();
-  //   }
-  // }, [mockNetworks]);
+  useEffect(() => {
+    getNetworks();
+  }, []);
+  // callback in useeffect
   return (
     <View style={styles.container}>
       <Text style={styles.headerText}>Connect your device to wifi</Text>
