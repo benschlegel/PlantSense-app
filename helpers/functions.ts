@@ -123,29 +123,36 @@ export function notificationStatusToText(status: NotificationStatus) {
   return NotificationText[status];
 }
 
-export async function sendLedRequest(red: number, green: number, blue: number) {
+export async function sendLedRequest(
+  red: number,
+  green: number,
+  blue: number,
+  host: string
+) {
   const ledEndpoint = "/led";
   const payload = {
     red: red,
     green: green,
     blue: blue,
   };
+  const address = "http://" + host + ".local";
+  console.log("address: " + address);
 
+  // fetch(address + "/deviceInfo")
+  //   .then((res) => res.json())
+  //   .then((resp) => {
+  //     console.log("device info response: ", resp);
+  //   });
   // Send post request to esp
-  fetch(baseServerUrl + ledEndpoint, {
+  fetch(address + ledEndpoint, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(payload),
-  })
-    .then((response) => response.json())
-    .then((result) => {
-      console.log("Success:", result);
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+  }).catch((error) => {
+    console.error("Error:", error);
+  });
 }
 
 /**

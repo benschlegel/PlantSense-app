@@ -60,3 +60,15 @@ export type AppContextType = [
   CurrentDeviceIndex,
   CurrentDeviceIndexSetter
 ];
+
+export type RgbPayload = {
+  red: number;
+  green: number;
+  blue: number;
+};
+
+export type CurrentInfoResponse = {
+  totalNotificationAmount: number;
+  isBreathing: boolean;
+  rgb: RgbPayload;
+};

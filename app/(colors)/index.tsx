@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
-import React, { useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { Link } from "expo-router";
 
 import Colors from "../../constants/Colors";
@@ -7,18 +7,22 @@ import Hr from "../../components/Hr";
 import StyledButton from "../../components/StyledButton";
 import { sendLedRequest } from "../../helpers/functions";
 import StyledInput from "../../components/StyledInput";
+import { AppContext } from "../../constants/Constants";
 
 export default function ColorsScreen() {
   const [red, setRed] = useState<string>("");
   const [green, setGreen] = useState<string>("");
   const [blue, setBlue] = useState<string>("");
 
-  function saveColors() {
+  const [devices, setDevices, currentDeviceIndex, setCurrentDeviceIndex] =
+    useContext(AppContext);
+
+  const saveColors = useCallback(() => {
     const redInt = parseInt(red);
     const greenInt = parseInt(green);
     const blueInt = parseInt(blue);
-    sendLedRequest(redInt, greenInt, blueInt);
-  }
+    sendLedRequest(redInt, greenInt, blueInt, devices[currentDeviceIndex].host);
+  }, [blue, currentDeviceIndex, devices, green, red]);
 
   return (
     <View style={styles.container}>
@@ -31,19 +35,25 @@ export default function ColorsScreen() {
           <StyledButton
             title="Pink"
             buttonStyle={[styles.nextButton, styles.brown]}
-            onPress={() => sendLedRequest(255, 16, 25)}
+            onPress={() =>
+              sendLedRequest(255, 16, 25, devices[currentDeviceIndex].host)
+            }
             disabled={false}
           />
           <StyledButton
             title="Purple"
             buttonStyle={[styles.nextButton, styles.purple]}
-            onPress={() => sendLedRequest(170, 27, 255)}
+            onPress={() =>
+              sendLedRequest(170, 27, 255, devices[currentDeviceIndex].host)
+            }
             disabled={false}
           />
           <StyledButton
             title="Cyan"
             buttonStyle={[styles.nextButton, styles.cyan]}
-            onPress={() => sendLedRequest(0, 255, 255)}
+            onPress={() =>
+              sendLedRequest(0, 255, 255, devices[currentDeviceIndex].host)
+            }
             disabled={false}
           />
           <Hr />

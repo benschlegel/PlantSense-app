@@ -137,7 +137,9 @@ export default function SettingsScreen() {
         <StyledButton
           title="purple"
           buttonStyle={{ backgroundColor: "purple" }}
-          onPress={() => sendLedRequest(255, 63, 0)}
+          onPress={() =>
+            sendLedRequest(255, 63, 0, devices[currentDeviceIndex].host)
+          }
           // onPress={() => sendLedRequest(0, 255, 0)}
         />
         <Hr style={styles.hrStyle} />
@@ -161,7 +163,9 @@ export default function SettingsScreen() {
         <StyledButton title="Toggle breathing" />
         <StyledButton
           title="Turn off LED"
-          onPress={() => sendLedRequest(0, 0, 0)}
+          onPress={() =>
+            sendLedRequest(0, 0, 0, devices[currentDeviceIndex].host)
+          }
         />
         <Link href="/(nfc)" asChild style={{ marginBottom: 20 }}>
           <StyledButton title="Go to setup" />
