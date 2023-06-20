@@ -4,7 +4,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { useImmer } from "use-immer";
 
 import EditScreenInfo from "../../components/EditScreenInfo";
@@ -18,6 +18,8 @@ import { NotificationStatus } from "../../constants/Types";
 import { useInterval } from "../../hooks/useInterval";
 import Notification from "../../components/Notification";
 import { baseServerUrl } from "../../constants/Config";
+import { typedFetch } from "../../helpers/functions";
+import { AppContext } from "../../constants/Constants";
 
 const notificationsEndpoint = "/notifications";
 
@@ -44,8 +46,9 @@ async function getNotifications(deviceName: string) {
   }
 }
 
-export default function MainScreen() {
+export default function NotificationsScreen() {
   const [notifications, setNotifications] = useState<NotificationType[]>([]);
+  const [devices, setDevices] = useContext(AppContext);
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -53,16 +56,22 @@ export default function MainScreen() {
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
-    }, 650);
+    }, 200);
   }, []);
 
   const fetchNotifications = useCallback(async () => {
-    const data = await fetch(baseServerUrl + "/allNotifications");
-    const devicesJson: NotificationType[] = await data.json();
-    // console.log(devicesJson);
-    setNotifications(devicesJson);
-    // console.log("Notis:", devicesJson[0].notifications);
-  }, [setNotifications]);
+    const params = new URLSearchParams();
+
+    for (const device of devices) {
+      params.append("hosts", device.host);
+    }
+
+    typedFetch<NotificationType[]>(
+      baseServerUrl + "/notifications?" + params
+    ).then((res) => {
+      setNotifications(res);
+    });
+  }, [devices]);
 
   // Load notificationson page load (without waiting for next interval)
   useEffect(() => {
@@ -92,7 +101,7 @@ export default function MainScreen() {
         {notifications.map((notification, index) => {
           return (
             <Notification
-              deviceName={notification.name}
+              deviceName={notification.deviceName}
               notifications={notification.notifications}
               fetchNotifications={fetchNotifications}
               key={index}

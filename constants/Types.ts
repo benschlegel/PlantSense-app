@@ -2,8 +2,9 @@ import type { Dispatch, SetStateAction } from "react";
 
 export type NotificationResponse = number[];
 export type NotificationType = {
-  name: string;
+  deviceName: string;
   notifications: NotificationStatus[];
+  host: string;
 };
 export type DevicesResponse = string[];
 
