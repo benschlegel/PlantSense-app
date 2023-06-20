@@ -67,6 +67,11 @@ export type RgbPayload = {
   blue: number;
 };
 
+export type RgbFull = {
+  rgb: RgbPayload;
+  isBreathing: boolean;
+};
+
 export type CurrentInfoResponse = {
   totalNotificationAmount: number;
   isBreathing: boolean;

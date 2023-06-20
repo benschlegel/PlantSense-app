@@ -10,6 +10,7 @@ import type {
   DeviceInfo,
   DeviceInfoPayload,
   NotificationStatus,
+  RgbFull,
   WifiInfo,
 } from "../constants/Types";
 
@@ -17,7 +18,7 @@ const deleteNotificationEndpoint = "/clearNotification";
 // TODO: update with hostName
 export function deleteNotification(host: string, index: number) {
   // Add '?' for parameter, URLSearchParams handles the rest
-  fetch(
+  typedFetch<RgbFull>(
     baseServerUrl +
       deleteNotificationEndpoint +
       "?" +
@@ -27,7 +28,15 @@ export function deleteNotification(host: string, index: number) {
       }).toString(),
     { method: "DELETE" }
   )
-    .then((res) => res.json())
+    .then((res) => {
+      sendLedRequest(
+        res.rgb.red,
+        res.rgb.green,
+        res.rgb.blue,
+        host,
+        res.isBreathing
+      );
+    })
     .catch((error) => {
       // console.error("Device not found.");
       return;
@@ -131,7 +140,7 @@ export async function sendLedRequest(
   isBreathing?: boolean
 ) {
   const ledEndpoint = "/led";
-  const payload = {
+  const payload: RgbFull = {
     rgb: {
       red: red,
       green: green,
