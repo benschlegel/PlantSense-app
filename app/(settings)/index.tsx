@@ -92,7 +92,8 @@ export default function SettingsScreen() {
       ]);
     });
   }
-  const [devices, setDevices] = useContext(AppContext);
+  const [devices, setDevices, currentDeviceIndex, setCurrentDeviceIndex] =
+    useContext(AppContext);
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Trigger States</Text>
@@ -169,6 +170,10 @@ export default function SettingsScreen() {
         <StyledButton
           title="Add test device"
           onPress={() => registerDevice()}
+        />
+        <StyledButton
+          title="Switch devices"
+          onPress={() => setCurrentDeviceIndex(currentDeviceIndex + 1)}
         />
       </ScrollView>
       {/* <View style={styles.green}>

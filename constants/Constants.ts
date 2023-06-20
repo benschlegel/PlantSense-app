@@ -17,4 +17,8 @@ export const AppContext = createContext<AppContextType>([
   () => {
     return;
   },
+  0,
+  () => {
+    return;
+  },
 ]);

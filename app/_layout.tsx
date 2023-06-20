@@ -77,6 +77,7 @@ function RootLayoutNav() {
   });
   const colorScheme = useColorScheme();
   const [devices, setDevices] = useState<DeviceInfo[]>([]);
+  const [currentDeviceIndex, setCurrentDeviceIndex] = useState<number>(0);
 
   //Add devices from storage to global context
   useLayoutEffect(() => {
@@ -90,12 +91,23 @@ function RootLayoutNav() {
     console.log("Current devices: ", devices);
   }, [devices]);
 
+  useEffect(() => {
+    console.log("Current device index: ", currentDeviceIndex);
+  }, [currentDeviceIndex]);
+
   // const params = useLocalSearchParams();
 
   return (
     <>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <AppContext.Provider value={[devices, setDevices]}>
+        <AppContext.Provider
+          value={[
+            devices,
+            setDevices,
+            currentDeviceIndex,
+            setCurrentDeviceIndex,
+          ]}
+        >
           <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="(main)" />
             <Stack.Screen

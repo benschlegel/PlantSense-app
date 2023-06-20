@@ -51,4 +51,12 @@ export type DeviceInfoPayload = {
 
 export type DeviceInfoSetter = Dispatch<SetStateAction<DeviceInfo[]>>;
 
-export type AppContextType = [DeviceInfo[], DeviceInfoSetter];
+type CurrentDeviceIndex = number;
+type CurrentDeviceIndexSetter = Dispatch<SetStateAction<number>>;
+
+export type AppContextType = [
+  DeviceInfo[],
+  DeviceInfoSetter,
+  CurrentDeviceIndex,
+  CurrentDeviceIndexSetter
+];
