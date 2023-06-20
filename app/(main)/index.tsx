@@ -16,7 +16,10 @@ import HappyPlanty from "../../assets/lottie/Planty_happy_led.json";
 import SadPlanty from "../../assets/lottie/Planty_sad_led.json";
 import HappyPlantyDefault from "../../assets/lottie/Planty_new.json";
 import StyledIcon from "../../components/StyledIcon";
-import { getDevicesFromStorage } from "../../helpers/functions";
+import { getDevicesFromStorage, typedFetch } from "../../helpers/functions";
+import { useInterval } from "../../hooks/useInterval";
+import { baseServerUrl } from "../../constants/Config";
+import type { CurrentInfoResponse } from "../../constants/Types";
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>["name"];
@@ -32,6 +35,14 @@ export default function MainScreen() {
       console.log("Devices: ", res);
     });
   }, []);
+
+  useInterval(() => {
+    typedFetch<CurrentInfoResponse>(baseServerUrl + "/currentInfo").then(
+      (res) => {
+        //
+      }
+    );
+  }, 500);
   return (
     <>
       <View style={styles.container}>

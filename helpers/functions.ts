@@ -15,9 +15,9 @@ import type {
 
 const deleteNotificationEndpoint = "/clearNotification";
 // TODO: update with hostName
-export async function deleteNotification(host: string, index: number) {
+export function deleteNotification(host: string, index: number) {
   // Add '?' for parameter, URLSearchParams handles the rest
-  const response = await fetch(
+  fetch(
     baseServerUrl +
       deleteNotificationEndpoint +
       "?" +
@@ -127,13 +127,17 @@ export async function sendLedRequest(
   red: number,
   green: number,
   blue: number,
-  host: string
+  host: string,
+  isBreathing?: boolean
 ) {
   const ledEndpoint = "/led";
   const payload = {
-    red: red,
-    green: green,
-    blue: blue,
+    rgb: {
+      red: red,
+      green: green,
+      blue: blue,
+    },
+    isBreathing: isBreathing ? isBreathing : false,
   };
   const address = "http://" + host + ".local";
   console.log("address: " + address);
