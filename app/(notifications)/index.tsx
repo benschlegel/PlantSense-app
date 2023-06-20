@@ -103,6 +103,7 @@ export default function NotificationsScreen() {
             <Notification
               deviceName={notification.deviceName}
               notifications={notification.notifications}
+              host={notification.host}
               fetchNotifications={fetchNotifications}
               key={index}
             />

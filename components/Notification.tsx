@@ -11,6 +11,7 @@ import Hr from "./Hr";
 type NotificationProps = {
   deviceName: string;
   notifications: number[];
+  host: string;
   fetchNotifications: () => void;
 };
 
@@ -18,12 +19,13 @@ export default function Notification({
   deviceName,
   notifications,
   fetchNotifications,
+  host,
 }: NotificationProps) {
   const notificationAmount = notifications.length;
 
   // Delete notifications on server, then re-fetch new ones
-  const clearNotification = (name: string, index: number) => {
-    deleteNotification(deviceName, index);
+  const clearNotification = (hostAddress: string, index: number) => {
+    deleteNotification(hostAddress, index);
     fetchNotifications();
   };
   return (
@@ -41,9 +43,7 @@ export default function Notification({
         {notifications.map((notification, index) => {
           return (
             <View key={index}>
-              <TouchableOpacity
-                onPress={() => clearNotification(deviceName, index)}
-              >
+              <TouchableOpacity onPress={() => clearNotification(host, index)}>
                 <View style={styles.singleNotificationContainer}>
                   <Text style={styles.notificationInfoText}>
                     {notificationStatusToText(notification)}

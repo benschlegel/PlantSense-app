@@ -15,14 +15,14 @@ import type {
 
 const deleteNotificationEndpoint = "/clearNotification";
 // TODO: update with hostName
-export async function deleteNotification(deviceName: string, index: number) {
+export async function deleteNotification(host: string, index: number) {
   // Add '?' for parameter, URLSearchParams handles the rest
   const response = await fetch(
     baseServerUrl +
       deleteNotificationEndpoint +
       "?" +
       new URLSearchParams({
-        name: deviceName,
+        host: host,
         index: index.toString(),
       }).toString(),
     { method: "DELETE" }
