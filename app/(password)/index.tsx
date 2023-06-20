@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from "react-native";
 import React, { useContext, useState } from "react";
-import { useLocalSearchParams } from "expo-router";
+import { Link, useLocalSearchParams } from "expo-router";
 
 import Colors from "../../constants/Colors";
 import Hr from "../../components/Hr";
@@ -15,6 +15,7 @@ import type {
 import { getDeviceAvailable, typedFetch } from "../../helpers/functions";
 import { isDebugActive, setupServerUrl } from "../../constants/Config";
 import { AppContext } from "../../constants/Constants";
+import { MonoText } from "../../components/StyledText";
 
 import WifiCard from "./WifiCard";
 
@@ -26,20 +27,18 @@ export default function PasswordScreen() {
   const [devices, setDevices] = useContext(AppContext);
   const [isValid, setIsValid] = useState<boolean | undefined>();
 
-  async function updateDevices() {
+  async function updateDevices(newDevice: DeviceInfo) {
     // Override isAvailable: true, if successful (and break)
-    const deviceInfo = await getDeviceAvailable();
-    if (deviceInfo) {
-      const found = devices.find((item) => item.host === deviceInfo?.host);
 
-      if (found) {
-        // If element with matching host was found, replace entry
-        devices[devices.indexOf(found)] = deviceInfo;
-        setDevices([...devices]);
-      } else {
-        // Otherwise, push new entry
-        setDevices([...devices, deviceInfo]);
-      }
+    const found = devices.find((item) => item.host === newDevice?.host);
+
+    if (found) {
+      // If element with matching host was found, replace entry
+      devices[devices.indexOf(found)] = newDevice;
+      setDevices([...devices]);
+    } else {
+      // Otherwise, push new entry
+      setDevices([...devices, newDevice]);
     }
   }
 
@@ -56,6 +55,20 @@ export default function PasswordScreen() {
         console.log("Res: ", res);
         setIsValid(res.isValid);
         setIsConnecting(false);
+
+        if (res.isValid) {
+          // Always set if res.isValid, early return for typescript
+          if (!res.deviceName || !res.host) {
+            return;
+          }
+          const newDevice: DeviceInfo = {
+            deviceName: res.deviceName,
+            host: res.host,
+          };
+
+          // Update device to storage/context
+          updateDevices(newDevice);
+        }
       })
       .catch(() => setIsConnecting(false));
   }
@@ -82,7 +95,7 @@ export default function PasswordScreen() {
   }
   return (
     <View style={styles.container}>
-      {(isValid === undefined || isValid === false || isValid === true) && (
+      {isValid === undefined || isValid === false ? (
         <WifiCard
           name={name as string}
           connectWithWifi={connectWithWifi}
@@ -93,6 +106,17 @@ export default function PasswordScreen() {
           setPassword={setPassword}
           isPasswordCard={true}
         />
+      ) : (
+        <View style={styles.successContainer}>
+          <MonoText style={styles.headerText}>Setup complete!</MonoText>
+          <Text style={styles.subheaderText}>
+            Your device is now set up. Please reconnect your phone to your home
+            wifi again and continue.
+          </Text>
+          <Link href={"/(main)"} asChild>
+            <StyledButton title="Finish" buttonStyle={styles.buttonStyle} />
+          </Link>
+        </View>
       )}
       {/* <View style={{ flex: 8 }} /> */}
     </View>
@@ -105,5 +129,27 @@ const styles = StyleSheet.create({
     paddingHorizontal: 28,
     paddingVertical: 28,
     backgroundColor: Colors.light.background,
+  },
+  successContainer: {
+    gap: 20,
+    //
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  subheaderText: {
+    color: Colors.light.dark,
+    fontSize: 16,
+  },
+  headerText: {
+    fontSize: 30,
+    color: Colors.light.dark,
+    fontWeight: "bold",
+  },
+  buttonStyle: {
+    borderWidth: 0,
+    marginTop: 20,
+    paddingHorizontal: 24,
+    paddingVertical: 14,
+    width: "70%",
   },
 });

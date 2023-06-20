@@ -7,8 +7,11 @@ export type NotificationType = {
 };
 export type DevicesResponse = string[];
 
+// Additional properties only sent if credentials were succsesful
 export type CredentialsResponse = {
   isValid: boolean;
+  deviceName?: string;
+  host?: string;
 };
 
 export enum NotificationStatus {

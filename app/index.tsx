@@ -17,7 +17,6 @@ const Index = () => {
 
   useEffect(() => {
     isComplete().then((complete) => {
-      console.log("Complete: ", complete);
       setIsSetupComplete(complete);
     });
   }, []);
