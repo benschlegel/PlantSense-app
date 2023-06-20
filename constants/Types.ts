@@ -15,6 +15,11 @@ export type CredentialsResponse = {
   host?: string;
 };
 
+export type RegisterBody = {
+  deviceName: string;
+  host: string;
+};
+
 export enum NotificationStatus {
   LOW_WATER,
   HIGH_WATER,

@@ -20,6 +20,7 @@ import Notification from "../../components/Notification";
 import { baseServerUrl } from "../../constants/Config";
 import { typedFetch } from "../../helpers/functions";
 import { AppContext } from "../../constants/Constants";
+import { MonoText } from "../../components/StyledText";
 
 const notificationsEndpoint = "/notifications";
 
@@ -60,12 +61,14 @@ export default function NotificationsScreen() {
   }, []);
 
   const fetchNotifications = useCallback(async () => {
+    if (devices.length === 0 || !devices) {
+      return;
+    }
     const params = new URLSearchParams();
 
     for (const device of devices) {
       params.append("hosts", device.host);
     }
-
     typedFetch<NotificationType[]>(
       baseServerUrl + "/notifications?" + params
     ).then((res) => {
@@ -98,17 +101,26 @@ export default function NotificationsScreen() {
         }
         style={styles.notificationContainerStyle}
       >
-        {notifications.map((notification, index) => {
-          return (
-            <Notification
-              deviceName={notification.deviceName}
-              notifications={notification.notifications}
-              host={notification.host}
-              fetchNotifications={fetchNotifications}
-              key={index}
-            />
-          );
-        })}
+        {!notifications || notifications.length === 0 ? (
+          <View style={styles.noDevicesContainer}>
+            <Text style={styles.noDevicesHeader}>No devices</Text>
+            <Text style={styles.noDevicesText}>
+              Get started by adding new devices
+            </Text>
+          </View>
+        ) : (
+          notifications.map((notification, index) => {
+            return (
+              <Notification
+                deviceName={notification.deviceName}
+                notifications={notification.notifications}
+                host={notification.host}
+                fetchNotifications={fetchNotifications}
+                key={index}
+              />
+            );
+          })
+        )}
       </ScrollView>
     </View>
   );
@@ -134,5 +146,18 @@ const styles = StyleSheet.create({
   notificationContainerStyle: {
     width: "100%",
     // paddingBottom: 200,
+  },
+  noDevicesText: {
+    color: Colors.light.dark,
+    fontSize: 17,
+  },
+  noDevicesContainer: {
+    gap: 20,
+    alignItems: "center",
+  },
+  noDevicesHeader: {
+    color: Colors.light.dark,
+    fontWeight: "500",
+    fontSize: 22,
   },
 });

@@ -8,6 +8,7 @@ import Colors from "../../constants/Colors";
 import type {
   NotificationResponse,
   NotificationStatus,
+  RegisterBody,
 } from "../../constants/Types";
 import { baseServerUrl } from "../../constants/Config";
 import StyledButton from "../../components/StyledButton";
@@ -71,6 +72,26 @@ async function getNotifications() {
 }
 
 export default function SettingsScreen() {
+  function registerDevice() {
+    const deviceName = "testDevice" + devices.length;
+    const payload: RegisterBody = { deviceName: deviceName, host: deviceName };
+    console.log("Payload: ", payload);
+    fetch(baseServerUrl + "/v1/mc/registerDevice", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    }).then(() => {
+      setDevices([
+        ...devices,
+        {
+          deviceName: deviceName,
+          host: deviceName,
+        },
+      ]);
+    });
+  }
   const [devices, setDevices] = useContext(AppContext);
   return (
     <View style={styles.container}>
@@ -145,6 +166,10 @@ export default function SettingsScreen() {
           <StyledButton title="Go to setup" />
         </Link>
         <StyledButton title="Reset devices" onPress={() => setDevices([])} />
+        <StyledButton
+          title="Add test device"
+          onPress={() => registerDevice()}
+        />
       </ScrollView>
       {/* <View style={styles.green}>
         <TouchableOpacity
