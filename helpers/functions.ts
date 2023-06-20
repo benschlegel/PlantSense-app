@@ -159,6 +159,13 @@ export async function sendLedRequest(
   });
 }
 
+export function toggleBreathing(host: string) {
+  const address = "http://" + host + ".local";
+  fetch(address + "/toggleState", {
+    method: "POST",
+  });
+}
+
 /**
  * Sets the deviceName on the microcontroller
  * @param name deviceName to be set

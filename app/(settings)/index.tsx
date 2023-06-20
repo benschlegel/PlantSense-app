@@ -13,7 +13,7 @@ import type {
 import { baseServerUrl } from "../../constants/Config";
 import StyledButton from "../../components/StyledButton";
 import Hr from "../../components/Hr";
-import { sendLedRequest } from "../../helpers/functions";
+import { sendLedRequest, toggleBreathing } from "../../helpers/functions";
 import { AppContext } from "../../constants/Constants";
 
 async function sendSetStateRequest(state: NotificationStatus) {
@@ -160,7 +160,10 @@ export default function SettingsScreen() {
           onPress={() => sendSetStateRequest(5)}
         />
         <Hr style={styles.hrStyle} />
-        <StyledButton title="Toggle breathing" />
+        <StyledButton
+          title="Toggle breathing"
+          onPress={() => toggleBreathing(devices[currentDeviceIndex].host)}
+        />
         <StyledButton
           title="Turn off LED"
           onPress={() =>
