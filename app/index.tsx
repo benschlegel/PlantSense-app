@@ -1,18 +1,23 @@
 import { Redirect } from "expo-router";
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { View } from "react-native";
 
-import { getSetupStateFromStorage } from "../helpers/functions";
+import {
+  getDevicesFromStorage,
+  getSetupStateFromStorage,
+} from "../helpers/functions";
+import { AppContext } from "../constants/Constants";
 
 async function isComplete() {
-  return await getSetupStateFromStorage();
+  return (await getDevicesFromStorage()).length > 0;
 }
 
 const Index = () => {
   const [isSetupComplete, setIsSetupComplete] = useState<boolean>();
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     isComplete().then((complete) => {
+      console.log("Complete: ", complete);
       setIsSetupComplete(complete);
     });
   }, []);
