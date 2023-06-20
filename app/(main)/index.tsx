@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import AnimatedLottieView from "lottie-react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import { Badge } from "@rneui/themed";
@@ -36,13 +36,15 @@ export default function MainScreen() {
     });
   }, []);
 
+  const [currentState, setCurrentState] = useState<CurrentInfoResponse>();
+
   useInterval(() => {
     typedFetch<CurrentInfoResponse>(baseServerUrl + "/currentInfo").then(
       (res) => {
-        //
+        setCurrentState(res);
       }
     );
-  }, 500);
+  }, 1000);
   return (
     <>
       <View style={styles.container}>
@@ -69,16 +71,19 @@ export default function MainScreen() {
                       iconSize={28}
                       color={Colors.light.dark}
                     />
-                    <Badge
-                      value="5"
-                      status="error"
-                      containerStyle={{
-                        position: "absolute",
-                        top: -3,
-                        opacity: 0.9,
-                        left: 15,
-                      }}
-                    />
+                    {currentState &&
+                      currentState.totalNotificationAmount > 0 && (
+                        <Badge
+                          value={currentState?.totalNotificationAmount}
+                          status="error"
+                          containerStyle={{
+                            position: "absolute",
+                            top: -3,
+                            opacity: 0.9,
+                            left: 15,
+                          }}
+                        />
+                      )}
                   </>
                 )}
               </Pressable>
