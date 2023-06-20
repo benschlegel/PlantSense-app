@@ -15,6 +15,7 @@ import HappyPlanty from "../../assets/lottie/Planty_happy_led.json";
 import SadPlanty from "../../assets/lottie/Planty_sad_led.json";
 import HappyPlantyDefault from "../../assets/lottie/Planty_new.json";
 import StyledIcon from "../../components/StyledIcon";
+import { getDevicesFromStorage } from "../../helpers/functions";
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>["name"];
@@ -25,6 +26,11 @@ function TabBarIcon(props: {
 }
 
 export default function MainScreen() {
+  useEffect(() => {
+    getDevicesFromStorage().then((res) => {
+      console.log("Devices: ", res);
+    });
+  }, []);
   return (
     <>
       <View style={styles.container}>

@@ -73,7 +73,9 @@ function Networks() {
   // TODO: figure out why networks wont load
   // Start loading networks on navigate
   useEffect(() => {
-    getNetworks();
+    if (!isDebugActive) {
+      getNetworks();
+    }
   }, []);
   // callback in useeffect
   return (

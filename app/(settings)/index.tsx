@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
-import { useCallback, useEffect } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import { Link } from "expo-router";
 
 import EditScreenInfo from "../../components/EditScreenInfo";
@@ -13,6 +13,7 @@ import { baseServerUrl } from "../../constants/Config";
 import StyledButton from "../../components/StyledButton";
 import Hr from "../../components/Hr";
 import { sendLedRequest } from "../../helpers/functions";
+import { AppContext } from "../../constants/Constants";
 
 async function sendSetStateRequest(state: NotificationStatus) {
   const payload = {
@@ -70,12 +71,7 @@ async function getNotifications() {
 }
 
 export default function SettingsScreen() {
-  useEffect(() => {
-    console.log("Component mount");
-    return () => {
-      console.log("Component did unmount");
-    };
-  }, []);
+  const [devices, setDevices] = useContext(AppContext);
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Trigger States</Text>
@@ -146,11 +142,9 @@ export default function SettingsScreen() {
           onPress={() => sendLedRequest(0, 0, 0)}
         />
         <Link href="/(nfc)" asChild style={{ marginBottom: 20 }}>
-          <StyledButton
-            title="Go to setup"
-            onPress={() => sendLedRequest(0, 0, 0)}
-          />
+          <StyledButton title="Go to setup" />
         </Link>
+        <StyledButton title="Reset devices" onPress={() => setDevices([])} />
       </ScrollView>
       {/* <View style={styles.green}>
         <TouchableOpacity

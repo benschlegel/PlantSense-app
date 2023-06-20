@@ -87,6 +87,7 @@ function RootLayoutNav() {
 
   useEffect(() => {
     saveDevicesToStorage(devices);
+    console.log("Current devices: ", devices);
   }, [devices]);
 
   // const params = useLocalSearchParams();
