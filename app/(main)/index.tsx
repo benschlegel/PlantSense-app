@@ -37,11 +37,20 @@ export default function MainScreen() {
   }, []);
 
   const [currentState, setCurrentState] = useState<CurrentInfoResponse>();
+  const [currentColor, setCurrentColor] = useState("rgba(0,0,0,0)");
 
   useInterval(() => {
     typedFetch<CurrentInfoResponse>(baseServerUrl + "/currentInfo").then(
       (res) => {
         setCurrentState(res);
+        const color =
+          "rgba(" +
+          res.rgb.red +
+          "," +
+          res.rgb.green +
+          "," +
+          res.rgb.blue +
+          ",1";
       }
     );
   }, 1000);
@@ -93,19 +102,35 @@ export default function MainScreen() {
         </View>
 
         {/* Planty animation on main screen, now works on both ios and android */}
-        <AnimatedLottieView
-          source={HappyPlanty}
-          autoPlay
-          loop
-          speed={0.95}
-          style={styles.absolute}
-          colorFilters={[
-            {
-              keypath: "LEDs fill",
-              color: "#AD7BE9",
-            },
-          ]}
-        />
+        {currentState && currentState.totalNotificationAmount > 0 ? (
+          <AnimatedLottieView
+            source={SadPlanty}
+            autoPlay
+            loop
+            speed={0.95}
+            style={styles.absolute}
+            colorFilters={[
+              {
+                keypath: "LEDs fill",
+                color: "#AD7BE9",
+              },
+            ]}
+          />
+        ) : (
+          <AnimatedLottieView
+            source={HappyPlanty}
+            autoPlay
+            loop
+            speed={0.95}
+            style={styles.absolute}
+            colorFilters={[
+              {
+                keypath: "LEDs fill",
+                color: "#AD7BE9",
+              },
+            ]}
+          />
+        )}
 
         <View style={styles.green}>
           <Link href="/(colors)" asChild>
