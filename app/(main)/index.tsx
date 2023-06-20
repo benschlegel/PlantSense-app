@@ -8,6 +8,7 @@ import AnimatedLottieView from "lottie-react-native";
 import React, { useEffect } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { Link } from "expo-router";
+import { Badge } from "@rneui/themed";
 
 import { Text, View } from "../../components/Themed";
 import Colors from "../../constants/Colors";
@@ -51,11 +52,23 @@ export default function MainScreen() {
             <Link href={"/(notifications)"} asChild>
               <Pressable>
                 {({ pressed }) => (
-                  <StyledIcon
-                    name="bell"
-                    iconSize={28}
-                    color={Colors.light.dark}
-                  />
+                  <>
+                    <StyledIcon
+                      name="bell"
+                      iconSize={28}
+                      color={Colors.light.dark}
+                    />
+                    <Badge
+                      value="5"
+                      status="error"
+                      containerStyle={{
+                        position: "absolute",
+                        top: -3,
+                        opacity: 0.9,
+                        left: 15,
+                      }}
+                    />
+                  </>
                 )}
               </Pressable>
             </Link>
