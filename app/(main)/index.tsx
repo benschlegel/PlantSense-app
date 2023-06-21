@@ -5,7 +5,13 @@ import {
   TouchableOpacity,
 } from "react-native";
 import AnimatedLottieView from "lottie-react-native";
-import React, { useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import { Badge } from "@rneui/themed";
@@ -20,6 +26,7 @@ import { getDevicesFromStorage, typedFetch } from "../../helpers/functions";
 import { useInterval } from "../../hooks/useInterval";
 import { baseServerUrl } from "../../constants/Config";
 import type { CurrentInfoResponse } from "../../constants/Types";
+import { AppContext } from "../../constants/Constants";
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>["name"];
@@ -38,22 +45,37 @@ export default function MainScreen() {
 
   const [currentState, setCurrentState] = useState<CurrentInfoResponse>();
   const [currentColor, setCurrentColor] = useState("rgba(0,0,0,0)");
+  const [devices, setDevices, currentDeviceIndex, setCurrentDeviceIndex] =
+    useContext(AppContext);
+
+  const fetchInfo = useCallback(() => {
+    const params = new URLSearchParams({
+      host: devices[currentDeviceIndex].host,
+    });
+    typedFetch<CurrentInfoResponse>(
+      baseServerUrl + "/currentInfo?" + params.toString()
+    ).then((res) => {
+      setCurrentState(res);
+      const color =
+        "rgba(" +
+        res.rgb.red +
+        "," +
+        res.rgb.green +
+        "," +
+        res.rgb.blue +
+        ",1)";
+      // console.log("Curr color: ", color);
+      setCurrentColor(color);
+    });
+  }, [currentDeviceIndex, devices]);
 
   useInterval(() => {
-    typedFetch<CurrentInfoResponse>(baseServerUrl + "/currentInfo").then(
-      (res) => {
-        setCurrentState(res);
-        const color =
-          "rgba(" +
-          res.rgb.red +
-          "," +
-          res.rgb.green +
-          "," +
-          res.rgb.blue +
-          ",1";
-      }
-    );
-  }, 1000);
+    fetchInfo();
+  }, 7500);
+
+  useLayoutEffect(() => {
+    fetchInfo();
+  }, [fetchInfo]);
   return (
     <>
       <View style={styles.container}>
@@ -112,7 +134,7 @@ export default function MainScreen() {
             colorFilters={[
               {
                 keypath: "LEDs fill",
-                color: "#AD7BE9",
+                color: currentColor,
               },
             ]}
           />
@@ -126,7 +148,7 @@ export default function MainScreen() {
             colorFilters={[
               {
                 keypath: "LEDs fill",
-                color: "#AD7BE9",
+                color: currentColor,
               },
             ]}
           />
