@@ -15,6 +15,7 @@ import React, {
 import { FontAwesome } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import { Badge } from "@rneui/themed";
+import { useSharedValue } from "react-native-reanimated";
 
 import { Text, View } from "../../components/Themed";
 import Colors from "../../constants/Colors";
@@ -45,6 +46,7 @@ export default function MainScreen() {
 
   const [currentState, setCurrentState] = useState<CurrentInfoResponse>();
   const [currentColor, setCurrentColor] = useState("rgba(0,0,0,0)");
+  const colorProgress = useSharedValue(0);
   const [devices, setDevices, currentDeviceIndex, setCurrentDeviceIndex] =
     useContext(AppContext);
 
