@@ -4,6 +4,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
+import type { AnimatedLottieViewProps } from "lottie-react-native";
 import AnimatedLottieView from "lottie-react-native";
 import React, {
   memo,
@@ -17,12 +18,20 @@ import React, {
 import { FontAwesome } from "@expo/vector-icons";
 import { Link, useRouter } from "expo-router";
 import { Badge } from "@rneui/themed";
-import Animated, { useSharedValue } from "react-native-reanimated";
+import Animated, {
+  Easing,
+  interpolateColor,
+  useAnimatedProps,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 
 import { Text, View } from "../../components/Themed";
 import Colors from "../../constants/Colors";
 import HappyPlanty from "../../assets/lottie/Planty_happy_led.json";
 import SadPlanty from "../../assets/lottie/Planty_sad_led.json";
+import Cube from "../../assets/lottie/cube-example.json";
 import HappyPlantyDefault from "../../assets/lottie/Planty_new.json";
 import StyledIcon from "../../components/StyledIcon";
 import { getDevicesFromStorage, typedFetch } from "../../helpers/functions";
@@ -33,6 +42,9 @@ import { AppContext } from "../../constants/Constants";
 import DeviceInfo from "../../components/DeviceInfo";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+const AnimatedLottie = Animated.createAnimatedComponent(AnimatedLottieView);
+Animated.addWhitelistedNativeProps({ colorFilters: true });
+Animated.addWhitelistedUIProps({ colorFilters: true });
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>["name"];
@@ -44,6 +56,7 @@ function TabBarIcon(props: {
 
 export default function MainScreen() {
   useEffect(() => {
+    // HappyPlanty.layers[0].
     getDevicesFromStorage().then((res) => {
       console.log("Devices: ", res);
     });
@@ -55,6 +68,53 @@ export default function MainScreen() {
   const [devices, setDevices, currentDeviceIndex, setCurrentDeviceIndex] =
     useContext(AppContext);
   const router = useRouter();
+
+  const colorProgress = useSharedValue(0);
+
+  const animatedProps = useAnimatedProps<
+    Partial<AnimatedLottieViewProps>
+  >(() => {
+    // draw a circle
+    // const newPlanty = HappyPlanty.layers
+    // if (colorProgress.value === 1) {
+    // }
+    // const colors = interpolateColor(
+    //   colorProgress.value,
+    //   [0, 1],
+    //   ["red", "yellow"]
+    // )
+    //   .split("(")[1]
+    //   .split(")")[0]
+    //   .split(", ")
+    //   .map((val, index) =>
+    //     index !== 3 ? parseFloat(val) / 255.0 : parseFloat(val)
+    //   );
+    // const b = Cube;
+    // Cube.layers[0].shapes[0].it[2].c!.k[2] = colorProgress.value;
+    return {
+      // source: Cube,
+      colorFilters: [
+        {
+          keypath: "Shape Layer 1",
+          color: interpolateColor(
+            colorProgress.value,
+            [0, 1],
+            ["yellow", "red"]
+          ),
+        },
+      ],
+    };
+  }, [colorProgress]);
+
+  const animatedBackground = useAnimatedStyle(() => {
+    return {
+      backgroundColor: interpolateColor(
+        colorProgress.value,
+        [0, 1],
+        ["red", "green"]
+      ),
+    };
+  });
 
   const fetchInfo = useCallback(() => {
     const params = new URLSearchParams({
@@ -143,10 +203,10 @@ export default function MainScreen() {
           // asChild
           style={styles.lottie}
           // style={{ backgroundColor: "green" }}
-          onPress={() => router.push("/(device-info)")}
+          // onPress={() => router.push("/(device-info)")}
         >
           {currentState && currentState.totalNotificationAmount > 0 ? (
-            <AnimatedLottieView
+            <AnimatedLottie
               source={SadPlanty}
               autoPlay
               loop
@@ -161,25 +221,43 @@ export default function MainScreen() {
               ]}
             />
           ) : (
-            <AnimatedLottieView
-              source={HappyPlanty}
+            // TODO: switch source to useAnimatedProps and animate raw json
+            <AnimatedLottie
+              source={Cube}
               autoPlay
-              resizeMode="center"
+              // resizeMode="center"
               loop
               speed={0.95}
-              style={styles.lottie}
+              style={[styles.lottie]}
               // colorFilters={[filter && filter]}
-              // animatedProps={}
+              animatedProps={animatedProps}
             />
           )}
         </AnimatedPressable>
         {/* </View> */}
+        <Animated.View
+          style={[{ width: 100, height: 100 }, animatedBackground]}
+        />
         <View style={styles.green}>
-          <Link href="/(colors)" asChild>
-            <TouchableOpacity style={styles.buttonColorContainer}>
-              <Text>Change Colors</Text>
-            </TouchableOpacity>
-          </Link>
+          {/* <Link href="/(colors)" asChild> */}
+          <TouchableOpacity
+            style={styles.buttonColorContainer}
+            onPress={
+              () => {
+                console.log("Changed color");
+                // Cube.layers[0].shapes[0].it[2].c!.k = [1, 1, 1, 1];
+                colorProgress.value = withTiming(1 - colorProgress.value, {
+                  duration: 500,
+                });
+              }
+              // (colorProgress.value = withTiming(1 - colorProgress.value, {
+              //   duration: 500,
+              // }))
+            }
+          >
+            <Text>Change Colors</Text>
+          </TouchableOpacity>
+          {/* </Link> */}
         </View>
       </View>
     </>
