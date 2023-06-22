@@ -64,19 +64,6 @@ export default function NfcScreen() {
       for (let i = 0; i < connectionAttemps; i++) {
         // Override isAvailable: true, if successful (and break)
         deviceInfo = await getDeviceAvailable();
-        if (deviceInfo) {
-          const found = devices.find((item) => item.host === deviceInfo?.host);
-
-          if (found) {
-            // If element with matching host was found, replace entry
-            devices[devices.indexOf(found)] = deviceInfo;
-            setDevices([...devices]);
-          } else {
-            // Otherwise, push new entry
-            setDevices([...devices, deviceInfo]);
-          }
-          break;
-        }
       }
       setIsScanning(false);
       setIsDeviceFound(true);
