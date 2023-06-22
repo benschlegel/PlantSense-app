@@ -15,9 +15,9 @@ import React, {
   useState,
 } from "react";
 import { FontAwesome } from "@expo/vector-icons";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { Badge } from "@rneui/themed";
-import { useSharedValue } from "react-native-reanimated";
+import Animated, { useSharedValue } from "react-native-reanimated";
 
 import { Text, View } from "../../components/Themed";
 import Colors from "../../constants/Colors";
@@ -31,6 +31,8 @@ import { baseServerUrl } from "../../constants/Config";
 import type { ColorFilter, CurrentInfoResponse } from "../../constants/Types";
 import { AppContext } from "../../constants/Constants";
 import DeviceInfo from "../../components/DeviceInfo";
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>["name"];
@@ -52,6 +54,7 @@ export default function MainScreen() {
 
   const [devices, setDevices, currentDeviceIndex, setCurrentDeviceIndex] =
     useContext(AppContext);
+  const router = useRouter();
 
   const fetchInfo = useCallback(() => {
     const params = new URLSearchParams({
@@ -134,9 +137,13 @@ export default function MainScreen() {
         {/* <DeviceInfo /> */}
 
         {/* Planty animation on main screen, now works on both ios and android */}
-        <Pressable
+        {/* <View style={styles.lottie} pointerEvents="none"> */}
+        <AnimatedPressable
+          // href={"/(device-info)"}
+          // asChild
           style={styles.lottie}
-          onPress={() => console.log("Planty clicked")}
+          // style={{ backgroundColor: "green" }}
+          onPress={() => router.push("/(device-info)")}
         >
           {currentState && currentState.totalNotificationAmount > 0 ? (
             <AnimatedLottieView
@@ -144,7 +151,7 @@ export default function MainScreen() {
               autoPlay
               loop
               resizeMode="center"
-              speed={1}
+              speed={0.95}
               // style={styles.lottie}
               colorFilters={[
                 {
@@ -165,7 +172,8 @@ export default function MainScreen() {
               // animatedProps={}
             />
           )}
-        </Pressable>
+        </AnimatedPressable>
+        {/* </View> */}
         <View style={styles.green}>
           <Link href="/(colors)" asChild>
             <TouchableOpacity style={styles.buttonColorContainer}>

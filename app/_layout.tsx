@@ -183,6 +183,16 @@ function RootLayoutNav() {
               }}
             />
             <Stack.Screen
+              name="(device-info)"
+              options={{
+                headerShown: false,
+                title: "Info",
+                headerStyle: { backgroundColor: Colors.light.primary2 },
+                headerTintColor: "#fff",
+                animation: "slide_from_bottom",
+              }}
+            />
+            <Stack.Screen
               name="modal"
               options={{ presentation: "transparentModal" }}
             />
