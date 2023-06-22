@@ -17,12 +17,7 @@ import React, {
 import { FontAwesome } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import { Badge } from "@rneui/themed";
-import {
-  interpolateColor,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
+import { useSharedValue } from "react-native-reanimated";
 
 import { Text, View } from "../../components/Themed";
 import Colors from "../../constants/Colors";
@@ -35,6 +30,7 @@ import { useInterval } from "../../hooks/useInterval";
 import { baseServerUrl } from "../../constants/Config";
 import type { ColorFilter, CurrentInfoResponse } from "../../constants/Types";
 import { AppContext } from "../../constants/Constants";
+import DeviceInfo from "../../components/DeviceInfo";
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>["name"];
@@ -52,17 +48,11 @@ export default function MainScreen() {
   }, []);
 
   const [currentState, setCurrentState] = useState<CurrentInfoResponse>();
-  const [currentColor, setCurrentColor] = useState("rgba(0,0,0,0)");
-  const currColor = useSharedValue(currentColor);
-  const colorProgress = useSharedValue(0);
+  const [currentColor, setCurrentColor] = useState("green");
+
   const [devices, setDevices, currentDeviceIndex, setCurrentDeviceIndex] =
     useContext(AppContext);
 
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      color: interpolateColor(colorProgress.value, [0, 1], ["yellow", "red"]),
-    };
-  }, [currentColor]);
   const fetchInfo = useCallback(() => {
     const params = new URLSearchParams({
       host: devices[currentDeviceIndex].host,
@@ -95,11 +85,6 @@ export default function MainScreen() {
       fetchInfo();
     }
   }, [devices, fetchInfo]);
-
-  const filter: ColorFilter = {
-    keypath: "LEDs fill",
-    color: interpolateColor(colorProgress.value, [0, 1], ["green", "red"]),
-  };
 
   return (
     <>
@@ -145,45 +130,45 @@ export default function MainScreen() {
               </Pressable>
             </Link>
           </View>
-          <View style={styles.infoContainer}>{/* <Text>Test</Text> */}</View>
         </View>
+        {/* <DeviceInfo /> */}
 
         {/* Planty animation on main screen, now works on both ios and android */}
-        {currentState && currentState.totalNotificationAmount > 0 ? (
-          <AnimatedLottieView
-            source={SadPlanty}
-            autoPlay
-            loop
-            speed={0.95}
-            style={styles.absolute}
-            colorFilters={[
-              {
-                keypath: "LEDs fill",
-                color: currentColor,
-              },
-            ]}
-          />
-        ) : (
-          <AnimatedLottieView
-            source={HappyPlanty}
-            autoPlay
-            loop
-            speed={0.95}
-            style={styles.absolute}
-            colorFilters={[filter && filter]}
-          />
-        )}
-
+        <Pressable
+          style={styles.lottie}
+          onPress={() => console.log("Planty clicked")}
+        >
+          {currentState && currentState.totalNotificationAmount > 0 ? (
+            <AnimatedLottieView
+              source={SadPlanty}
+              autoPlay
+              loop
+              resizeMode="center"
+              speed={1}
+              // style={styles.lottie}
+              colorFilters={[
+                {
+                  keypath: "LEDs fill",
+                  color: currentColor,
+                },
+              ]}
+            />
+          ) : (
+            <AnimatedLottieView
+              source={HappyPlanty}
+              autoPlay
+              resizeMode="center"
+              loop
+              speed={0.95}
+              style={styles.lottie}
+              // colorFilters={[filter && filter]}
+              // animatedProps={}
+            />
+          )}
+        </Pressable>
         <View style={styles.green}>
           <Link href="/(colors)" asChild>
-            <TouchableOpacity
-              style={styles.buttonColorContainer}
-              // onPress={() =>
-              //   (colorProgress.value = withTiming(1 - colorProgress.value, {
-              //     duration: 1000,
-              //   }))
-              // }
-            >
+            <TouchableOpacity style={styles.buttonColorContainer}>
               <Text>Change Colors</Text>
             </TouchableOpacity>
           </Link>
@@ -200,14 +185,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  absolute: {
+  lottie: {
     // position: "absolute",
     // top: 20,
     // right: 0,
-    // backgroundColor: "red",
+    // backgroundColor: "green",
     // height: 400,
-    width: "90%",
+    width: "100%",
     flex: 1,
+    alignItems: "center",
     // margin: 100,
     // alignContent: "center",
     // alignItems: "center",
@@ -246,9 +232,5 @@ const styles = StyleSheet.create({
     borderColor: Colors.light.dark,
     borderWidth: 1.5,
     marginTop: 48,
-  },
-  infoContainer: {
-    flexDirection: "column",
-    backgroundColor: "red",
   },
 });
