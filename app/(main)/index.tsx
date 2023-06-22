@@ -6,16 +6,23 @@ import {
 } from "react-native";
 import AnimatedLottieView from "lottie-react-native";
 import React, {
+  memo,
   useCallback,
   useContext,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useState,
 } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import { Badge } from "@rneui/themed";
-import { useSharedValue } from "react-native-reanimated";
+import {
+  interpolateColor,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 
 import { Text, View } from "../../components/Themed";
 import Colors from "../../constants/Colors";
@@ -26,7 +33,7 @@ import StyledIcon from "../../components/StyledIcon";
 import { getDevicesFromStorage, typedFetch } from "../../helpers/functions";
 import { useInterval } from "../../hooks/useInterval";
 import { baseServerUrl } from "../../constants/Config";
-import type { CurrentInfoResponse } from "../../constants/Types";
+import type { ColorFilter, CurrentInfoResponse } from "../../constants/Types";
 import { AppContext } from "../../constants/Constants";
 
 function TabBarIcon(props: {
@@ -46,10 +53,16 @@ export default function MainScreen() {
 
   const [currentState, setCurrentState] = useState<CurrentInfoResponse>();
   const [currentColor, setCurrentColor] = useState("rgba(0,0,0,0)");
+  const currColor = useSharedValue(currentColor);
   const colorProgress = useSharedValue(0);
   const [devices, setDevices, currentDeviceIndex, setCurrentDeviceIndex] =
     useContext(AppContext);
 
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      color: interpolateColor(colorProgress.value, [0, 1], ["yellow", "red"]),
+    };
+  }, [currentColor]);
   const fetchInfo = useCallback(() => {
     const params = new URLSearchParams({
       host: devices[currentDeviceIndex].host,
@@ -72,12 +85,22 @@ export default function MainScreen() {
   }, [currentDeviceIndex, devices]);
 
   useInterval(() => {
-    fetchInfo();
-  }, 7500);
+    if (devices && devices.length > 0) {
+      fetchInfo();
+    }
+  }, 750);
 
   useLayoutEffect(() => {
-    fetchInfo();
-  }, [fetchInfo]);
+    if (devices && devices.length > 0) {
+      fetchInfo();
+    }
+  }, [devices, fetchInfo]);
+
+  const filter: ColorFilter = {
+    keypath: "LEDs fill",
+    color: interpolateColor(colorProgress.value, [0, 1], ["green", "red"]),
+  };
+
   return (
     <>
       <View style={styles.container}>
@@ -147,18 +170,20 @@ export default function MainScreen() {
             loop
             speed={0.95}
             style={styles.absolute}
-            colorFilters={[
-              {
-                keypath: "LEDs fill",
-                color: currentColor,
-              },
-            ]}
+            colorFilters={[filter && filter]}
           />
         )}
 
         <View style={styles.green}>
           <Link href="/(colors)" asChild>
-            <TouchableOpacity style={styles.buttonColorContainer}>
+            <TouchableOpacity
+              style={styles.buttonColorContainer}
+              // onPress={() =>
+              //   (colorProgress.value = withTiming(1 - colorProgress.value, {
+              //     duration: 1000,
+              //   }))
+              // }
+            >
               <Text>Change Colors</Text>
             </TouchableOpacity>
           </Link>

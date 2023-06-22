@@ -77,3 +77,8 @@ export type CurrentInfoResponse = {
   isBreathing: boolean;
   rgb: RgbPayload;
 };
+
+export type ColorFilter = {
+  keypath: string;
+  color: string;
+};
