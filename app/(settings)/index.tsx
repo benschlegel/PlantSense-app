@@ -6,32 +6,20 @@ import EditScreenInfo from "../../components/EditScreenInfo";
 import { Text, View } from "../../components/Themed";
 import Colors from "../../constants/Colors";
 import type {
+  RgbFull,
   NotificationResponse,
-  NotificationStatus,
   RegisterBody,
 } from "../../constants/Types";
+import { NotificationStatus } from "../../constants/Types";
 import { baseServerUrl } from "../../constants/Config";
 import StyledButton from "../../components/StyledButton";
 import Hr from "../../components/Hr";
-import { sendLedRequest, toggleBreathing } from "../../helpers/functions";
+import {
+  sendLedRequest,
+  toggleBreathing,
+  typedFetch,
+} from "../../helpers/functions";
 import { AppContext } from "../../constants/Constants";
-
-async function sendSetStateRequest(state: NotificationStatus) {
-  const payload = {
-    state: state,
-  };
-
-  // Send post request to server
-  fetch(baseServerUrl + "/setState", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
-  }).catch((error) => {
-    console.error("Error:", error);
-  });
-}
 
 async function getBaseEndpoint() {
   const response = await fetch(baseServerUrl);
@@ -72,6 +60,9 @@ async function getNotifications() {
 }
 
 export default function SettingsScreen() {
+  const [devices, setDevices, currentDeviceIndex, setCurrentDeviceIndex] =
+    useContext(AppContext);
+
   function registerDevice() {
     const deviceName = "testDevice" + devices.length;
     const payload: RegisterBody = { deviceName: deviceName, host: deviceName };
@@ -92,8 +83,33 @@ export default function SettingsScreen() {
       ]);
     });
   }
-  const [devices, setDevices, currentDeviceIndex, setCurrentDeviceIndex] =
-    useContext(AppContext);
+
+  async function sendSetStateRequest(state: NotificationStatus) {
+    const payload = {
+      state: state,
+    };
+
+    // Send post request to server
+    typedFetch<RgbFull>(baseServerUrl + "/setState", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    })
+      .then((res) => {
+        const { rgb, isBreathing } = res;
+        console.log("setState response: ", res);
+        if (devices && devices.length > 0) {
+          const { host } = devices[currentDeviceIndex];
+
+          sendLedRequest(rgb.red, rgb.green, rgb.blue, host, isBreathing);
+        }
+      })
+      .catch((err) => {
+        console.error("Error while setting state:", err);
+      });
+  }
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Trigger States</Text>
@@ -104,36 +120,19 @@ export default function SettingsScreen() {
         <StyledButton
           title="Low water"
           buttonStyle={styles.blue}
-          onPress={() => sendSetStateRequest(0)}
+          onPress={() => sendSetStateRequest(NotificationStatus.LOW_WATER)}
         />
         <StyledButton
           title="Too little sun"
           buttonStyle={styles.yellow}
           textStyle={styles.yellowText}
-          onPress={() => sendSetStateRequest(2)}
+          onPress={() => sendSetStateRequest(NotificationStatus.LOW_SUN)}
         />
         <StyledButton
           title="Too little fertilizer"
           buttonStyle={styles.red}
-          onPress={() => sendSetStateRequest(4)}
+          onPress={() => sendSetStateRequest(NotificationStatus.LOW_SOIL)}
         />
-        {/* <StyledButton
-          title="blue"
-          buttonStyle={styles.blue}
-          onPress={() => sendLedRequest(0, 0, 255)}
-        />
-        <StyledButton
-          title="green"
-          buttonStyle={{ backgroundColor: "green" }}
-          textStyle={styles.yellowText}
-          onPress={() => sendLedRequest(0, 255, 0)}
-        />
-        <StyledButton
-          title="red"
-          buttonStyle={styles.red}
-          onPress={() => sendLedRequest(255, 0, 0)}
-        />
-  */}
         <StyledButton
           title="purple"
           buttonStyle={{ backgroundColor: "purple" }}
@@ -146,18 +145,18 @@ export default function SettingsScreen() {
         <StyledButton
           title="Too much water"
           buttonStyle={styles.blue}
-          onPress={() => sendSetStateRequest(1)}
+          onPress={() => sendSetStateRequest(NotificationStatus.HIGH_WATER)}
         />
         <StyledButton
           title="Too much sun"
           buttonStyle={styles.yellow}
           textStyle={styles.yellowText}
-          onPress={() => sendSetStateRequest(3)}
+          onPress={() => sendSetStateRequest(NotificationStatus.HIGH_SUN)}
         />
         <StyledButton
           title="Too much fertilizer"
           buttonStyle={styles.red}
-          onPress={() => sendSetStateRequest(5)}
+          onPress={() => sendSetStateRequest(NotificationStatus.HIGH_SOIL)}
         />
         <Hr style={styles.hrStyle} />
         <StyledButton
