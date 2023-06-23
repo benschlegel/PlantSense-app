@@ -21,52 +21,13 @@ import {
 } from "../../helpers/functions";
 import { AppContext } from "../../constants/Constants";
 
-async function getBaseEndpoint() {
-  const response = await fetch(baseServerUrl);
-  const jsonData = await response.text();
-  console.log(jsonData);
-}
-
-async function checkHeartbeat() {
-  const response = await fetch(baseServerUrl + "/heartbeat")
-    .then((res) => {
-      const { status } = res;
-      console.log("Received status code: ", status);
-    })
-    .catch((error) => {
-      console.error("Heartbeat Error:", error);
-    });
-}
-
-async function getNotifications() {
-  const response: NotificationResponse = await fetch(
-    baseServerUrl +
-      "/notifications?" +
-      new URLSearchParams({
-        name: "PlantSense - Planty",
-      }).toString()
-  )
-    .then((res) => res.json())
-    .catch((error) => {
-      // console.error("Device not found.");
-      return;
-    });
-
-  if (!response) {
-    console.error("Device not found.");
-  } else {
-    console.log("Response (notifications): ", response);
-  }
-}
-
 export default function SettingsScreen() {
   const [devices, setDevices, currentDeviceIndex, setCurrentDeviceIndex] =
     useContext(AppContext);
 
-  function registerDevice() {
+  const registerDevice = useCallback(() => {
     const deviceName = "testDevice" + devices.length;
     const payload: RegisterBody = { deviceName: deviceName, host: deviceName };
-    console.log("Payload: ", payload);
     fetch(baseServerUrl + "/v1/mc/registerDevice", {
       method: "POST",
       headers: {
@@ -82,9 +43,14 @@ export default function SettingsScreen() {
         },
       ]);
     });
-  }
+  }, [devices, setDevices]);
 
-  async function sendSetStateRequest(state: NotificationStatus) {
+  /**
+   * Requests colors corresponding to state from server.
+   * If devices are set and microcontroller is available, send color request directly to microcontroller
+   * @param state what state to set
+   */
+  function sendSetStateRequest(state: NotificationStatus) {
     const payload = {
       state: state,
     };
@@ -99,7 +65,6 @@ export default function SettingsScreen() {
     })
       .then((res) => {
         const { rgb, isBreathing } = res;
-        console.log("setState response: ", res);
         if (devices && devices.length > 0) {
           const { host } = devices[currentDeviceIndex];
 
@@ -133,15 +98,8 @@ export default function SettingsScreen() {
           buttonStyle={styles.red}
           onPress={() => sendSetStateRequest(NotificationStatus.LOW_SOIL)}
         />
-        <StyledButton
-          title="purple"
-          buttonStyle={{ backgroundColor: "purple" }}
-          onPress={() =>
-            sendLedRequest(255, 63, 0, devices[currentDeviceIndex].host)
-          }
-          // onPress={() => sendLedRequest(0, 255, 0)}
-        />
         <Hr style={styles.hrStyle} />
+
         <StyledButton
           title="Too much water"
           buttonStyle={styles.blue}
@@ -160,6 +118,14 @@ export default function SettingsScreen() {
         />
         <Hr style={styles.hrStyle} />
         <StyledButton
+          title="purple"
+          buttonStyle={styles.purple}
+          onPress={() =>
+            sendLedRequest(255, 63, 0, devices[currentDeviceIndex].host)
+          }
+        />
+
+        <StyledButton
           title="Toggle breathing"
           onPress={() => toggleBreathing(devices[currentDeviceIndex].host)}
         />
@@ -169,7 +135,8 @@ export default function SettingsScreen() {
             sendLedRequest(0, 0, 0, devices[currentDeviceIndex].host)
           }
         />
-        <Link href="/(nfc)" asChild style={{ marginBottom: 20 }}>
+        <Hr style={styles.hrStyle} />
+        <Link href="/(nfc)" asChild>
           <StyledButton title="Go to setup" />
         </Link>
         <StyledButton title="Reset devices" onPress={() => setDevices([])} />
@@ -182,38 +149,6 @@ export default function SettingsScreen() {
           onPress={() => setCurrentDeviceIndex(currentDeviceIndex + 1)}
         />
       </ScrollView>
-      {/* <View style={styles.green}>
-        <TouchableOpacity
-          style={[styles.buttonColorContainer, styles.red]}
-          onPress={() => sendLedRequest(255, 255, 0)}
-        >
-          <Text>Red</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.green}>
-        <TouchableOpacity
-          style={styles.buttonColorContainer}
-          onPress={() => sendLedRequest(0, 255, 0)}
-        >
-          <Text>Green</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.green}>
-        <TouchableOpacity
-          style={[styles.buttonColorContainer, styles.blue]}
-          onPress={() => sendLedRequest(0, 0, 255)}
-        >
-          <Text>Blue</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.green}>
-        <TouchableOpacity
-          style={[styles.buttonColorContainer, styles.blue]}
-          onPress={() => getNotifications()}
-        >
-          <Text>heartbeat check</Text>
-        </TouchableOpacity>
-      </View> */}
     </View>
   );
 }
@@ -224,6 +159,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  purple: { backgroundColor: "purple" },
   red: {
     backgroundColor: "#F45050",
   },
