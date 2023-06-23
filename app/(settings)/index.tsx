@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
-import { useCallback, useContext, useEffect } from "react";
+import { useCallback, useContext, useEffect, useMemo } from "react";
 import { Link } from "expo-router";
 
 import EditScreenInfo from "../../components/EditScreenInfo";
@@ -24,6 +24,13 @@ import { AppContext } from "../../constants/Constants";
 export default function SettingsScreen() {
   const [devices, setDevices, currentDeviceIndex, setCurrentDeviceIndex] =
     useContext(AppContext);
+
+  const currentHost = useMemo(() => {
+    if (devices && devices.length > 0 && devices[currentDeviceIndex]) {
+      return devices[currentDeviceIndex].host;
+    }
+    return "";
+  }, [currentDeviceIndex, devices]);
 
   const registerDevice = useCallback(() => {
     const deviceName = "testDevice" + devices.length;
@@ -53,6 +60,7 @@ export default function SettingsScreen() {
   function sendSetStateRequest(state: NotificationStatus) {
     const payload = {
       state: state,
+      host: currentHost,
     };
 
     // Send post request to server
@@ -66,9 +74,13 @@ export default function SettingsScreen() {
       .then((res) => {
         const { rgb, isBreathing } = res;
         if (devices && devices.length > 0) {
-          const { host } = devices[currentDeviceIndex];
-
-          sendLedRequest(rgb.red, rgb.green, rgb.blue, host, isBreathing);
+          sendLedRequest(
+            rgb.red,
+            rgb.green,
+            rgb.blue,
+            currentHost,
+            isBreathing
+          );
         }
       })
       .catch((err) => {
