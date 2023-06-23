@@ -58,6 +58,7 @@ export default function SettingsScreen() {
    * @param state what state to set
    */
   function sendSetStateRequest(state: NotificationStatus) {
+    // TODO: investigate why this pauses lottie animation
     const payload = {
       state: state,
       host: currentHost,

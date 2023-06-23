@@ -15,9 +15,7 @@ import type {
 } from "../constants/Types";
 
 const deleteNotificationEndpoint = "/clearNotification";
-// TODO: update with hostName
 export function deleteNotification(host: string, index: number) {
-  console.log("Delete: ", host);
   // Add '?' for parameter, URLSearchParams handles the rest
   typedFetch<RgbFull>(
     baseServerUrl +

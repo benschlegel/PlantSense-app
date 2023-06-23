@@ -1,3 +1,4 @@
+import type { ViewStyle } from "react-native";
 import {
   Platform,
   Pressable,
@@ -5,6 +6,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import AnimatedLottieView from "lottie-react-native";
+import type { LegacyRef } from "react";
 import React, {
   memo,
   useCallback,
@@ -12,12 +14,17 @@ import React, {
   useEffect,
   useLayoutEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { FontAwesome } from "@expo/vector-icons";
-import { Link, useRouter } from "expo-router";
+import { Link, useFocusEffect, useNavigation, useRouter } from "expo-router";
 import { Badge } from "@rneui/themed";
-import Animated, { useSharedValue } from "react-native-reanimated";
+import Animated, {
+  useAnimatedRef,
+  useSharedValue,
+} from "react-native-reanimated";
+import { useIsFocused } from "@react-navigation/native";
 
 import { Text, View } from "../../components/Themed";
 import Colors from "../../constants/Colors";
@@ -34,27 +41,14 @@ import DeviceInfo from "../../components/DeviceInfo";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>["name"];
-  color: string;
-  iconSize: number;
-}) {
-  return <FontAwesome size={props.iconSize} {...props} />;
-}
-
 export default function MainScreen() {
-  useEffect(() => {
-    getDevicesFromStorage().then((res) => {
-      console.log("Devices: ", res);
-    });
-  }, []);
-
   const [currentState, setCurrentState] = useState<CurrentInfoResponse>();
   const [currentColor, setCurrentColor] = useState("green");
+  const lottieRef = useAnimatedRef<AnimatedLottieView>();
+  const isFocused = useIsFocused();
 
   const [devices, setDevices, currentDeviceIndex, setCurrentDeviceIndex] =
     useContext(AppContext);
-  const router = useRouter();
 
   const fetchInfo = useCallback(() => {
     const params = new URLSearchParams({
@@ -77,6 +71,13 @@ export default function MainScreen() {
     });
   }, [currentDeviceIndex, devices]);
 
+  const currentSource = useMemo(() => {
+    if (currentState && currentState.totalNotificationAmount > 0) {
+      return SadPlanty;
+    }
+    return HappyPlanty;
+  }, [currentState]);
+
   useInterval(() => {
     if (devices && devices.length > 0) {
       fetchInfo();
@@ -87,7 +88,10 @@ export default function MainScreen() {
     if (devices && devices.length > 0) {
       fetchInfo();
     }
-  }, [devices, fetchInfo]);
+    if (isFocused) {
+      lottieRef.current?.resume();
+    }
+  }, [devices, fetchInfo, isFocused, lottieRef]);
 
   return (
     <>
@@ -137,43 +141,29 @@ export default function MainScreen() {
         {/* <DeviceInfo /> */}
 
         {/* Planty animation on main screen, now works on both ios and android */}
-        {/* <View style={styles.lottie} pointerEvents="none"> */}
         <AnimatedPressable
           // href={"/(device-info)"}
           // asChild
           style={styles.lottie}
           // style={{ backgroundColor: "green" }}
-          onPress={() => router.push("/(device-info)")}
+          // onPress={() => router.push("/(device-info)")}
         >
-          {currentState && currentState.totalNotificationAmount > 0 ? (
-            <AnimatedLottieView
-              source={SadPlanty}
-              autoPlay
-              loop
-              resizeMode="center"
-              speed={0.95}
-              // style={styles.lottie}
-              colorFilters={[
-                {
-                  keypath: "LEDs fill",
-                  color: currentColor,
-                },
-              ]}
-            />
-          ) : (
-            <AnimatedLottieView
-              source={HappyPlanty}
-              autoPlay
-              resizeMode="center"
-              loop
-              speed={0.95}
-              style={styles.lottie}
-              // colorFilters={[filter && filter]}
-              // animatedProps={}
-            />
-          )}
+          <AnimatedLottieView
+            source={currentSource}
+            autoPlay
+            loop
+            resizeMode="center"
+            speed={0.95}
+            style={styles.lottie}
+            ref={lottieRef}
+            colorFilters={[
+              {
+                keypath: "LEDs fill",
+                color: currentColor,
+              },
+            ]}
+          />
         </AnimatedPressable>
-        {/* </View> */}
         <View style={styles.green}>
           <Link href="/(colors)" asChild>
             <TouchableOpacity style={styles.buttonColorContainer}>
@@ -194,29 +184,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   lottie: {
-    // position: "absolute",
-    // top: 20,
-    // right: 0,
-    // backgroundColor: "green",
-    // height: 400,
     width: "100%",
     flex: 1,
     alignItems: "center",
-    // margin: 100,
-    // alignContent: "center",
-    // alignItems: "center",
-    // alignSelf: "center",
-    // verticalAlign: "middle",
   },
   red: {
-    // flex: 1,
-    // backgroundColor: "blue",
     paddingBottom: 80,
     width: "100%",
   },
   green: {
-    // backgroundColor: "green",
-    // flex: 1,
     justifyContent: "center",
     alignItems: "center",
 
