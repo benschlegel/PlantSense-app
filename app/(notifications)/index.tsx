@@ -17,7 +17,7 @@ import type {
 import { NotificationStatus } from "../../constants/Types";
 import { useInterval } from "../../hooks/useInterval";
 import Notification from "../../components/Notification";
-import { baseServerUrl } from "../../constants/Config";
+import { baseServerUrl, isDebugActive } from "../../constants/Config";
 import { typedFetch } from "../../helpers/functions";
 import { AppContext } from "../../constants/Constants";
 import { MonoText } from "../../components/StyledText";
@@ -76,15 +76,30 @@ export default function NotificationsScreen() {
     });
   }, [devices]);
 
+  const fetchDebugNotifications = useCallback(() => {
+    typedFetch<NotificationType[]>(baseServerUrl + "/allNotifications").then(
+      (res) => {
+        setNotifications(res);
+      }
+    );
+  }, []);
+
   // Load notificationson page load (without waiting for next interval)
   useEffect(() => {
-    fetchNotifications();
-  }, [fetchNotifications]);
+    if (isDebugActive) {
+      fetchDebugNotifications();
+    } else {
+      fetchNotifications();
+    }
+  }, [fetchDebugNotifications, fetchNotifications]);
 
   // Get notifications in interval
   useInterval(() => {
-    // getDevices();
-    fetchNotifications();
+    if (isDebugActive) {
+      fetchDebugNotifications();
+    } else {
+      fetchNotifications();
+    }
   }, 1500);
 
   return (
