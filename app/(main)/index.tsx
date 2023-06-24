@@ -22,6 +22,7 @@ import Animated, {
   Easing,
   interpolateColor,
   useAnimatedProps,
+  useAnimatedRef,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -55,12 +56,17 @@ function TabBarIcon(props: {
 }
 
 export default function MainScreen() {
+  const lottieRef = useAnimatedRef<AnimatedLottieView>();
   useEffect(() => {
     // HappyPlanty.layers[0].
     getDevicesFromStorage().then((res) => {
       console.log("Devices: ", res);
     });
   }, []);
+
+  useEffect(() => {
+    lottieRef.current?.play();
+  }, [lottieRef]);
 
   const [currentState, setCurrentState] = useState<CurrentInfoResponse>();
   const [currentColor, setCurrentColor] = useState("green");
@@ -211,7 +217,7 @@ export default function MainScreen() {
               autoPlay
               loop
               resizeMode="center"
-              speed={0.95}
+              // speed={0.95}
               // style={styles.lottie}
               colorFilters={[
                 {
@@ -225,6 +231,7 @@ export default function MainScreen() {
             <AnimatedLottie
               source={Cube}
               autoPlay
+              ref={lottieRef}
               // resizeMode="center"
               loop
               speed={0.95}
@@ -244,7 +251,6 @@ export default function MainScreen() {
             style={styles.buttonColorContainer}
             onPress={
               () => {
-                console.log("Changed color");
                 // Cube.layers[0].shapes[0].it[2].c!.k = [1, 1, 1, 1];
                 colorProgress.value = withTiming(1 - colorProgress.value, {
                   duration: 500,
