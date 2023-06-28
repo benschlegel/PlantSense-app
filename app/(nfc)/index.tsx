@@ -102,13 +102,18 @@ export default function NfcScreen() {
       <View style={styles.buttonContainer}>
         {/* Switch button if device was found. This makes it easier to wrap new button with Link */}
         {isDeviceFound ? (
-          <Link href={redirectHref} asChild>
-            <StyledButton
-              title={deviceFoundButtonText}
-              isLoading={isDeviceFound && isAutoProceeding}
-              buttonStyle={styles.buttonStyle}
-            />
-          </Link>
+          <View style={styles.buttons}>
+            <Link href={redirectHref} asChild>
+              <StyledButton
+                title={deviceFoundButtonText}
+                isLoading={isDeviceFound && isAutoProceeding}
+                buttonStyle={styles.buttonStyle}
+              />
+            </Link>
+            <Link href={"/(main)"} asChild>
+              <StyledButton title="skip" buttonStyle={styles.buttonStyle} />
+            </Link>
+          </View>
         ) : (
           <View style={styles.buttons}>
             <StyledButton
@@ -154,13 +159,13 @@ const styles = StyleSheet.create({
     // backgroundColor: "red",
   },
   deviceFoundAnimation: {
-    marginVertical: 48,
+    marginVertical: 32,
   },
   buttons: { gap: 20 },
   buttonContainer: {
     // flex: 1,
-    marginBottom: 60,
-    marginTop: 20,
+    marginBottom: 50,
+    // marginTop: 20,
   },
   subheaderContainer: {
     marginTop: 12,
