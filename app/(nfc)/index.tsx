@@ -110,9 +110,9 @@ export default function NfcScreen() {
                 buttonStyle={styles.buttonStyle}
               />
             </Link>
-            <Link href={"/(main)"} asChild>
+            {/* <Link href={"/(main)"} asChild>
               <StyledButton title="skip" buttonStyle={styles.buttonStyle} />
-            </Link>
+            </Link> */}
           </View>
         ) : (
           <View style={styles.buttons}>
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     // backgroundColor: "red",
   },
   deviceFoundAnimation: {
-    marginVertical: 32,
+    marginVertical: 48,
   },
   buttons: { gap: 20 },
   buttonContainer: {
